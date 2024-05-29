@@ -1,0 +1,112 @@
+.menu-bar {
+    /* Other styles for the menu bar */
+}
+
+.company-name {
+    /* Styles for the company name section */
+    font-weight: bold;
+    text-align: left;
+    font-size: 25px;
+    margin-left: 5px;
+}
+
+.menu-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100px;
+    /* Width of the fade effect */
+    background: linear-gradient(to left, #f8fafc, transparent);
+}
+
+.profile-section {
+    /* Styles for the profile section at the bottom */
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+}
+
+.user-profile {
+    /* Styles for the user profile section */
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    font-weight: bold;
+}
+
+.user-name {
+    /* Additional styles for the user name */
+    margin-left: 8px;
+}
+
+.custom-button {
+    display: inline-flex;
+    /* Aligns the icon with the text */
+    align-items: center;
+    /* Centers the items vertically */
+    background-color: #fafafc;
+    /* The button's background color */
+    color: rgb(255, 0, 0);
+    /* The button's text color */
+    border: none;
+    /* Removes the border */
+    padding: 10px 8px;
+    /* Vertical and horizontal padding */
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+
+}
+
+
+.plus-icon {
+    background-color: white;
+    color: #ff0000;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    /* Dimmed background */
+    backdrop-filter: blur(5px);
+    /* Optional blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    /* Make sure this is higher than other content */
+}
+
+.modal-content {
+    display: flex;
+    justify-content: center;
+    /* Center the tables horizontally */
+    flex-wrap: wrap;
+    /* Allows wrapping to next line on small screens */
+    gap: 16px;
+    /* Space between the tables */
+}
+.stripe-pricing-table {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /* Or 'space-around' for even spacing */
+}
