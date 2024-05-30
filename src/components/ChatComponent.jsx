@@ -47,36 +47,39 @@ export default function ChatComponent({ callhandleClick }) {
         ))}
       </div>
 
-      <form onSubmit={handleSubmit} className="mb-0">
-        <div className="bg-white rounded-md mb-4 p-2 shadow-md bottom-0">
+      <form onSubmit={handleSubmit} className="mb-4">
+        <div className="bg-white rounded-md px-4 py-3 shadow-md bottom-0">
           <textarea
-            className="resize-none border-top-4 border-white rounded  w-full focus:border-white focus:border-3"
+            className="resize-none w-full border-0  bottom-0 align-middle p-0"
             value={input}
             placeholder="Ask Anything..."
             onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault(); // Prevent the default behavior of adding a new line
+                handleSubmit(e); // Call the submit function
+              }
+            }}
             style={{
               overflow: "auto",
-              minHeight: "58px",
+              minHeight: "24px",
               maxHeight: "200px",
-              height: "58px",
+              boxSizing: "border-box",
+              height: "24px",
             }}
             onInput={(e) => {
-              const currentHeight = parseInt(e.target.style.height, 10);
               const style = window.getComputedStyle(e.target);
-              const paddingTop = parseInt(style.paddingTop, 10);
-              e.target.style.height = "auto";
+              e.target.style.height = "1px";
               const scrollHeight = e.target.scrollHeight;
               console.log(scrollHeight);
-              console.log(currentHeight);
-              if (scrollHeight > currentHeight) {
-                const newHeight = Math.min(
-                  scrollHeight,
-                  parseInt(style.maxHeight)
-                );
-                e.target.style.height = `${newHeight}px`;
-              } else {
-                e.target.style.height = `${scrollHeight}px`;
-              }
+              console.log(style.height);
+
+              const newHeight = Math.min(
+                scrollHeight,
+                parseInt(style.maxHeight)
+              );
+              e.target.style.height = `${newHeight}px`;
+
               e.target.scrollTop = e.target.scrollHeight;
             }}
           />

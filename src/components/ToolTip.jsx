@@ -181,7 +181,10 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
               alignItems: "center",
             }}
           >
-            <button className="styled-button mr-1" onClick={handleDefineClick}>
+            <button
+              className="styled-button mr-1 font-inter"
+              onClick={handleDefineClick}
+            >
               Define
             </button>
             <div
@@ -192,7 +195,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
               }}
             ></div>
             <button
-              className="styled-button ml-1"
+              className="styled-button ml-1 font-inter"
               onClick={handleExplainSubmit}
             >
               Explain
