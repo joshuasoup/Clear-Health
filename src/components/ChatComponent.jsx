@@ -8,6 +8,27 @@ import logo from "../assets/medical-logo.png";
 import "../styles/chat.css";
 
 export default function ChatComponent({ callhandleClick }) {
+  const adjustHeight = (element) => {
+    const originHeight = element.target.style.height;
+    // element.style.height = element.style.minHeight;
+    // element.style.height = "auto";
+    const scrollHeight = element.target.scrollHeight;
+
+    const maxHeight = parseInt(
+      window.getComputedStyle(element.target).maxHeight
+    );
+    console.log(scrollHeight);
+
+    // Calculate the new height based on the content
+    const newHeight = Math.min(scrollHeight, maxHeight);
+
+    // Set the new height
+    element.target.style.height = `${newHeight}px`;
+
+    // Optional: Scroll to the bottom if needed
+    element.target.scrollTop = element.target.scrollHeight;
+  };
+
   const { messages, input, handleInputChange, handleSubmit } = useChat();
   return (
     <div className="flex flex-col py-0 stretch h-full w-full justify-between border bg-menu px-4">
@@ -50,7 +71,7 @@ export default function ChatComponent({ callhandleClick }) {
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="bg-white rounded-md px-4 py-3 shadow-md bottom-0">
           <textarea
-            className="resize-none w-full border-0  bottom-0 align-middle p-0"
+            className="resize-none w-full border-0 overflow-y-hidden bottom-0 align-middle p-0"
             value={input}
             placeholder="Ask Anything..."
             onChange={handleInputChange}
@@ -68,19 +89,7 @@ export default function ChatComponent({ callhandleClick }) {
               height: "24px",
             }}
             onInput={(e) => {
-              const style = window.getComputedStyle(e.target);
-              e.target.style.height = "1px";
-              const scrollHeight = e.target.scrollHeight;
-              console.log(scrollHeight);
-              console.log(style.height);
-
-              const newHeight = Math.min(
-                scrollHeight,
-                parseInt(style.maxHeight)
-              );
-              e.target.style.height = `${newHeight}px`;
-
-              e.target.scrollTop = e.target.scrollHeight;
+              adjustHeight(e);
             }}
           />
         </div>

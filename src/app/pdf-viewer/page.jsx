@@ -340,9 +340,9 @@ export default function Viewer() {
         </div>
 
         {/* Main content area for the PDF viewer */}
-        <div className="flex-7 mx-2 flex-col h-screen my-0 overflow-auto">
+        <div className="flex-7 mx-2 flex-col h-screen my-0 overflow-auto flex">
           {/* top menubar */}
-          <header className="p-3 h-16 flex justify-between items-center sticky top-0 left-0 bg-white z-10 ">
+          <header className="p-3 h-16 flex justify-between items-center sticky top-0 left-0 bg-white z-10 h-max-pdfbar">
             <h1>{title}</h1>
             <div className="flex">
               {/* <button

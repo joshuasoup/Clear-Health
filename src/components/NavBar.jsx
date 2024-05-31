@@ -19,7 +19,7 @@ const Navbar = () => {
             <div className="flex items-center text-gray-800 text-xl font-bold">
               {/* Replace the src with your logo image path and adjust width and height accordingly */}
               <Image src={medicalLogo} alt="Logo" width={40} height={40} />
-              <span className="ml-3">Clear Health</span>
+              <span className="ml-3 font-inter">Clear Health</span>
             </div>
           </Link>
 

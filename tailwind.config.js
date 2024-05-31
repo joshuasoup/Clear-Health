@@ -32,13 +32,15 @@ module.exports = {
         '111': '1.1',
       },
       minHeight: {
-        'pdf': '80%'
+        'pdf': '80%',
+        
       },
       minWidth: {
         'menu': '240px'
       },
       maxHeight: {
-        'menu': '200px'
+        'menu': '200px',
+        'pdfbar': '64px',
       },
       flex: {
         7: '7 1 0%', // flex-grow: 7; flex-shrink: 1; flex-basis: 0%;

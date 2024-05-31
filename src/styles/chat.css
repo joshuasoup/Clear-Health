@@ -2,10 +2,13 @@ textarea:focus {
     border-color: rgb(0, 0, 0);
     outline: 0;
     --tw-ring-color: rgb(255, 255, 255);
+    border: 0;
+    border-bottom-width: 0;
     /* or any other color */
 }
 
 textarea{
     background-color: rgb(255, 255, 255);
+   
     
 }
