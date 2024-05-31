@@ -1,5 +1,4 @@
-"use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useChat } from "ai/react";
 import RightArrow from "../assets/1.png";
 import Image from "next/image";
@@ -8,33 +7,24 @@ import logo from "../assets/medical-logo.png";
 import "../styles/chat.css";
 
 export default function ChatComponent({ callhandleClick }) {
+  const { messages, input, handleInputChange, handleSubmit } = useChat();
+
+  // Function to adjust the height of the textarea dynamically
   const adjustHeight = (element) => {
-    const originHeight = element.target.style.height;
-    // element.style.height = element.style.minHeight;
-    // element.style.height = "auto";
-    const scrollHeight = element.target.scrollHeight;
-
-    const maxHeight = parseInt(
-      window.getComputedStyle(element.target).maxHeight
-    );
-    console.log(scrollHeight);
-
-    // Calculate the new height based on the content
-    const newHeight = Math.min(scrollHeight, maxHeight);
-
-    // Set the new height
-    element.target.style.height = `${newHeight}px`;
-
-    // Optional: Scroll to the bottom if needed
-    element.target.scrollTop = element.target.scrollHeight;
+    element.style.height = "auto";
+    element.style.height = element.scrollHeight + "px";
+    if (element.scrollHeight > parseInt(element.style.maxHeight)) {
+      element.style.overflow = "auto";
+    } else {
+      element.style.overflow = "hidden";
+    }
   };
 
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
   return (
     <div className="flex flex-col py-0 stretch h-full w-full justify-between border bg-menu px-4">
       <button
         onClick={callhandleClick}
-        class="toggle-button hover:bg-gray-300 rounded-md mt-4 mb-2 w-full flex-row flex"
+        className="toggle-button hover:bg-gray-300 rounded-md mt-4 mb-2 w-full flex-row flex"
       >
         <Image src={RightArrow} alt="Next" width={30} height={30} />
       </button>
@@ -42,7 +32,7 @@ export default function ChatComponent({ callhandleClick }) {
         {messages.map((m) => (
           <div
             key={m.id}
-            className="font-inter my-1 rounded-md text-sm flex items-start "
+            className="font-inter my-1 rounded-md text-sm flex items-start"
           >
             <div className="bg-transparent mr-1">
               {m.role === "user" ? (
@@ -82,15 +72,14 @@ export default function ChatComponent({ callhandleClick }) {
               }
             }}
             style={{
-              overflow: "auto",
+              overflow: "hidden",
               minHeight: "24px",
               maxHeight: "200px",
               boxSizing: "border-box",
-              height: "24px",
+              height: "auto", // Initial height set to minHeight
             }}
-            onInput={(e) => {
-              adjustHeight(e);
-            }}
+            rows="1"
+            onInput={(e) => adjustHeight(e.target)}
           />
         </div>
       </form>

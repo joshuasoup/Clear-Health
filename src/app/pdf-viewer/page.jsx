@@ -149,6 +149,7 @@ export default function Viewer() {
 
   const handleClick = () => {
     setShowComponent(!showComponent);
+    setIsOpen(false);
   };
 
   const handleCloseModal = () => {
