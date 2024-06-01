@@ -11,7 +11,6 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
   const [explanation, setExplanation] = useState("");
   const tooltipRef = useRef(null);
   const [source, setSource] = useState("");
-  const { messages } = useChat();
 
   useEffect(() => {
     const handleSelectionChange = () => {
