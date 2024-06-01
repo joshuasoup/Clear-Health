@@ -35,6 +35,7 @@ async function handler(req: Request) {
 
   // Stream the response
   const stream = OpenAIStream(response);
+  console.log(stream)
   return new StreamingTextResponse(stream);
 }
 

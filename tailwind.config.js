@@ -33,10 +33,11 @@ module.exports = {
       },
       minHeight: {
         'pdf': '80%',
+        'pdfbar': '63px',
         
       },
       minWidth: {
-        'menu': '240px'
+        'menu': '240px',
       },
       maxHeight: {
         'menu': '200px',

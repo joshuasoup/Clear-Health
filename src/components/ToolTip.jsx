@@ -139,10 +139,27 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
 
       while (true) {
         const { value, done } = await reader.read();
-        if (done) break;
-        console.log(messages);
-        result += decoder.decode(value);
-        setExplanation(result); // Update the explanation as the stream progresses
+        if (done) {
+          console.log("Stream completed.");
+          break;
+        }
+
+        // Decode the stream part
+        const textChunk = decoder.decode(value, { stream: true });
+
+        // Process each line individually
+        const lines = textChunk.split("\n");
+        lines.forEach((line) => {
+          const match = line.match(/"([^"]+)"/);
+          if (match) {
+            const message = match[1];
+            console.log(message); // Logs each extracted message
+            result += message;
+          }
+        });
+
+        // Assuming setExplanation is a function that updates your component or handles state
+        setExplanation(result);
       }
     }
   };

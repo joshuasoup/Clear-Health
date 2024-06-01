@@ -49,7 +49,7 @@ export default function Viewer() {
   const [showComponent, setShowComponent] = useState(false);
   const [userWidth, setUserWidth] = useState(null);
   const containerRef = useRef(null);
-  const dynamicWidth = userWidth ?? (showComponent ? "400px" : "0px");
+  const dynamicWidth = userWidth ?? (showComponent ? "350px" : "0px");
   const [activeItemKey, setActiveItemKey] = useState(null);
   const [renamingKey, setRenamingKey] = useState(null);
   const [newName, setNewName] = useState("");
@@ -149,6 +149,10 @@ export default function Viewer() {
 
   const handleClick = () => {
     setShowComponent(!showComponent);
+  };
+
+  const openChat = () => {
+    setShowComponent(!showComponent);
     setIsOpen(false);
   };
 
@@ -205,7 +209,7 @@ export default function Viewer() {
             isOpen
               ? "bg-menu border-slate-200 border shadow-md flex-1 min-w-menu overflow-x-hidden"
               : "bg-transparent border-transparent shadow-none w-12 min-w-12"
-          } transition-all duration-500 ease-in-out p-3 overflow-y-auto  flex flex-col h-full`}
+          }  transition-all duration-500 ease-in-out p-3 overflow-y-auto  flex flex-col h-full`}
         >
           {isOpen && (
             <>
@@ -343,7 +347,7 @@ export default function Viewer() {
         {/* Main content area for the PDF viewer */}
         <div className="flex-7 mx-2 flex-col h-screen my-0 overflow-auto flex">
           {/* top menubar */}
-          <header className="p-3 h-16 flex justify-between items-center sticky top-0 left-0 bg-white z-10 h-max-pdfbar">
+          <header className="p-3 flex justify-between items-center sticky top-0 left-0 bg-white z-10 max-h-pdfbar min-h-pdfbar font-inter">
             <h1>{title}</h1>
             <div className="flex">
               {/* <button
@@ -368,7 +372,7 @@ export default function Viewer() {
                 </div>
               )}
               {!showComponent && (
-                <button className="button mr-0" onClick={handleClick}>
+                <button className="button mr-0" onClick={openChat}>
                   Chat
                 </button>
               )}
@@ -396,7 +400,7 @@ export default function Viewer() {
           style={{
             width: dynamicWidth,
             maxWidth: "725px",
-            minWidth: showComponent ? "400px" : "0px",
+            minWidth: showComponent ? "350px" : "0px",
             // Removed minWidth and maxWidth for clarity in this example
           }}
         >
