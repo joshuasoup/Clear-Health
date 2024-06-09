@@ -2,6 +2,7 @@
 import React, { useState, useEffect, forwardRef, useRef } from "react";
 import "../styles/tooltip.css";
 import { useChat } from "ai/react";
+import { tool } from "ai";
 
 const ToolTip = forwardRef(({ tooltipText }, ref) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -9,38 +10,61 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
   const [contentMode, setContentMode] = useState("buttons"); // 'buttons' or 'text'
   const [definitions, setDefinitions] = useState([]);
   const [explanation, setExplanation] = useState("");
-  const tooltipRef = useRef(null);
-  const [source, setSource] = useState("");
+  const tooltipRef = useRef();
+  const [source, setSource] = useState(null);
+  const baseToolTipHeight = 40;
 
   useEffect(() => {
     const handleSelectionChange = () => {
       const selection = window.getSelection();
-      if (selection.rangeCount > 0 && ref.current) {
-        const range = selection.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
-        const baseToolTipHeight = 40;
-        const container = ref.current.getBoundingClientRect();
+      if (!selection.rangeCount) return;
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      let isSelectionWithinTooltip = null;
 
-        setPosition({
-          top: rect.top + window.scrollY - container.top - baseToolTipHeight,
-          left: rect.left - container.left + window.scrollX,
-        });
+      if (tooltipRef.current) {
+        const toolTip = tooltipRef.current.getBoundingClientRect();
 
-        const selectedStr = selection.toString().trim();
+        isSelectionWithinTooltip =
+          rect.top >= toolTip.top &&
+          rect.bottom <= toolTip.bottom &&
+          rect.left >= toolTip.left &&
+          rect.right <= toolTip.right;
+      }
 
-        if (
-          selection.rangeCount > 0 &&
-          selectedStr !== "" &&
-          rect.left > container.left &&
-          container.x + container.width > rect.left &&
-          rect.top + window.scrollY < container.y + container.height
-        ) {
-          if (ref.current) {
-            setIsVisible(true);
+      if (
+        selection.rangeCount > 0 &&
+        selection.toString().length > 1 &&
+        isSelectionWithinTooltip != true
+      ) {
+        if (ref.current) {
+          const containerRect = ref.current.getBoundingClientRect();
+
+          // Check if the selection is within the bounds of the container
+          if (
+            rect.left > containerRect.left &&
+            rect.right < containerRect.right &&
+            rect.top > containerRect.top &&
+            rect.bottom < containerRect.bottom
+          ) {
+            // Set tooltip position
+            setPosition({
+              top:
+                rect.top +
+                window.scrollY -
+                containerRect.top -
+                baseToolTipHeight,
+              left: rect.left - containerRect.left + window.scrollX,
+            });
+
+            setIsVisible(true); // Show tooltip
+          } else {
+            setIsVisible(false); // Hide tooltip
           }
-        } else {
-          setIsVisible(false);
         }
+      } else if (isSelectionWithinTooltip == true) {
+      } else {
+        setIsVisible(false);
       }
     };
 
@@ -48,7 +72,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
     return () => {
       document.removeEventListener("selectionchange", handleSelectionChange);
     };
-  }, [ref]);
+  }, [ref, baseToolTipHeight]);
 
   useEffect(() => {
     if (!isVisible) {
@@ -166,11 +190,11 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
   return (
     isVisible && (
       <div
-        ref={tooltipRef}
         style={{
           position: "absolute",
           top: `${position.top}px`,
           left: `${position.left}px`,
+          visibility: isVisible ? "visible" : "hidden",
           padding: "5px",
           backgroundColor: "white",
           color: "black",
@@ -218,7 +242,11 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
             </button>
           </div>
         ) : (
-          <div style={{ textAlign: "left" }} className="px-3 py-1">
+          <div
+            style={{ textAlign: "left" }}
+            className="px-3 py-1"
+            ref={tooltipRef}
+          >
             {definitions.length > 0 && (
               <>
                 {definitions.map((meaning, idx) => (
