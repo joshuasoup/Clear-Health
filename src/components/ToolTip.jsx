@@ -175,7 +175,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
         lines.forEach((line) => {
           const match = line.match(/"([^"]+)"/);
           if (match) {
-            const message = match[1];
+            const message = match[1].replace(/\n/g, "");
             console.log(message); // Logs each extracted message
             result += message;
           }
