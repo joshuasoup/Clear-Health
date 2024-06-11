@@ -18,3 +18,13 @@
     background-color: #f1f1f1;
     /* Slightly darker green on hover, adjust as needed */
 }
+
+#hyperlink {
+    color: red;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+::after #hyperlink {
+    color: rgb(150, 3, 3)
+}

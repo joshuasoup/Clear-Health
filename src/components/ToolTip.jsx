@@ -175,17 +175,26 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
         lines.forEach((line) => {
           const match = line.match(/"([^"]+)"/);
           if (match) {
-            const message = match[1].replace(/\n/g, "");
+            const message = match[1].replace("\\n", "");
             console.log(message); // Logs each extracted message
             result += message;
+            ``;
           }
         });
 
         // Assuming setExplanation is a function that updates your component or handles state
-        setExplanation(result);
+        setExplanation(hyperlinkURLs(result));
       }
     }
   };
+
+  function hyperlinkURLs(text) {
+    const urlPattern = /(https?:\/\/[^\s]+)/g;
+    return text.replace(
+      urlPattern,
+      '<a href="$1" id="hyperlink" target="_blank">$1</a>'
+    );
+  }
 
   return (
     isVisible && (
@@ -298,9 +307,11 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
                     Explanation:
                   </h4>
                 </div>
-                <p style={{ fontSize: "13px", marginLeft: "5px" }}>
-                  {explanation}
-                </p>
+                <p
+                  style={{ fontSize: "13px", marginLeft: "5px" }}
+                  id="explanation"
+                  dangerouslySetInnerHTML={{ __html: explanation }}
+                />
               </div>
             )}
           </div>
