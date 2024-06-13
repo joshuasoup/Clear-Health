@@ -3,6 +3,8 @@ import React, { useState, useEffect, forwardRef, useRef } from "react";
 import "../styles/tooltip.css";
 import { useChat } from "ai/react";
 import { tool } from "ai";
+import DOMPurify from "dompurify";
+import parse from "html-react-parser";
 
 const ToolTip = forwardRef(({ tooltipText }, ref) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -20,11 +22,10 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
       if (!selection.rangeCount) return;
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
-      let isSelectionWithinTooltip = null;
+      let isSelectionWithinTooltip = false;
 
       if (tooltipRef.current) {
         const toolTip = tooltipRef.current.getBoundingClientRect();
-
         isSelectionWithinTooltip =
           rect.top >= toolTip.top &&
           rect.bottom <= toolTip.bottom &&
@@ -35,19 +36,17 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
       if (
         selection.rangeCount > 0 &&
         selection.toString().length > 1 &&
-        isSelectionWithinTooltip != true
+        !isSelectionWithinTooltip
       ) {
         if (ref.current) {
           const containerRect = ref.current.getBoundingClientRect();
 
-          // Check if the selection is within the bounds of the container
           if (
             rect.left > containerRect.left &&
             rect.right < containerRect.right &&
             rect.top > containerRect.top &&
             rect.bottom < containerRect.bottom
           ) {
-            // Set tooltip position
             setPosition({
               top:
                 rect.top +
@@ -57,12 +56,13 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
               left: rect.left - containerRect.left + window.scrollX,
             });
 
-            setIsVisible(true); // Show tooltip
+            setIsVisible(true);
           } else {
-            setIsVisible(false); // Hide tooltip
+            setIsVisible(false);
           }
         }
-      } else if (isSelectionWithinTooltip == true) {
+      } else if (isSelectionWithinTooltip) {
+        // Do nothing if the selection is within the tooltip
       } else {
         setIsVisible(false);
       }
@@ -183,7 +183,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
         });
 
         // Assuming setExplanation is a function that updates your component or handles state
-        setExplanation(hyperlinkURLs(result));
+        setExplanation(sanitizeHTML(boldText(hyperlinkURLs(result))));
       }
     }
   };
@@ -194,6 +194,15 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
       urlPattern,
       '<a href="$1" id="hyperlink" target="_blank">$1</a>'
     );
+  }
+
+  function boldText(text) {
+    const pattern = /\\(.*?)\\/g;
+    return text.replace(pattern, "<strong>$1</strong>");
+  }
+
+  function sanitizeHTML(html) {
+    return DOMPurify.sanitize(html);
   }
 
   return (
@@ -310,8 +319,10 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
                 <p
                   style={{ fontSize: "13px", marginLeft: "5px" }}
                   id="explanation"
-                  dangerouslySetInnerHTML={{ __html: explanation }}
-                />
+                  // dangerouslySetInnerHTML={{ __html: explanation }}
+                >
+                  {parse(explanation)}
+                </p>
               </div>
             )}
           </div>
