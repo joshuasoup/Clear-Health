@@ -1,6 +1,6 @@
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import clientPromise from "../../lib/mongo/db";
-import { getAuth } from '@clerk/nextjs/server';
+import { getAuth } from "@clerk/nextjs/server";
 
 // Initialize the S3 client
 const s3Client = new S3Client({
@@ -12,15 +12,17 @@ const s3Client = new S3Client({
 });
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed, only POST requests are accepted' });
+  if (req.method !== "POST") {
+    return res
+      .status(405)
+      .json({ error: "Method not allowed, only POST requests are accepted" });
   }
 
   const { userId } = getAuth(req);
   const { key } = req.body;
 
   if (!key) {
-    return res.status(400).json({ error: 'File key must be provided' });
+    return res.status(400).json({ error: "File key must be provided" });
   }
 
   try {
@@ -34,15 +36,15 @@ export default async function handler(req, res) {
     // Delete the file metadata from MongoDB
     const client = await clientPromise;
     const database = client.db("userdata");
-    const usersCollection = database.collection("PDFs");
+    const usersCollection = database.collection("Users");
     await usersCollection.updateOne(
       { clerkUserId: userId },
       { $pull: { pdfs: { key: key } } }
     );
 
-    res.status(200).json({ message: 'File deleted successfully' });
+    res.status(200).json({ message: "File deleted successfully" });
   } catch (error) {
     console.error("Error deleting file:", error);
-    res.status(500).json({ error: 'Failed to delete file' });
+    res.status(500).json({ error: "Failed to delete file" });
   }
 }

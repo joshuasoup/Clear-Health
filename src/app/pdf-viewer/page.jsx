@@ -7,7 +7,7 @@ import "../../styles/viewer.css";
 import UserMenu from "../../components/UserMenu";
 import Link from "next/link";
 import Image from "next/image";
-import medicalLogo from "../../assets/mock up logo (2).png";
+import medicalLogo from "../../assets/clearhealthlogo.png";
 import PricingCatalog from "../../components/PricingCatalog";
 import { motion } from "framer-motion";
 import sidebar from "../../assets/1.png";
@@ -15,6 +15,7 @@ import ChatComponent from "../../components/ChatComponent";
 import garbagecan from "../../assets/garbagecan.png";
 import pencil from "../../assets/pencil.png";
 import DeleteButton from "../../components/DeleteButton";
+import TokenProgressBar from "../../components/TokenProgressBar";
 
 const PDFLoader = dynamic(() => import("../../components/PDFLoader"), {
   ssr: false,
@@ -71,7 +72,7 @@ export default function Viewer() {
   };
 
   const submitRename = async (key, newName) => {
-    const url = "/api/rename"; // Adjust the URL to match your API route
+    const url = "/api/rename-pdf"; // Adjust the URL to match your API route
     const body = JSON.stringify({ fileId: key, newName });
 
     try {
@@ -174,10 +175,10 @@ export default function Viewer() {
   useEffect(() => {
     async function fetchPDFs() {
       try {
-        const response = await fetch("/api/files");
+        const response = await fetch("/api/get-pdf");
         if (!response.ok) throw new Error("Network response was not ok.");
         const data = await response.json();
-        setPDFs(data.pdfs);
+        setPDFs(data.userCollection);
       } catch (error) {
         setError(error.message);
       }
@@ -209,7 +210,7 @@ export default function Viewer() {
             isOpen
               ? "bg-menu border-slate-200 border shadow-md flex-1 min-w-menu overflow-x-hidden"
               : "bg-transparent border-transparent shadow-none w-12 min-w-12"
-          }  transition-all duration-500 ease-in-out p-3 overflow-y-auto  flex flex-col h-full`}
+          }  transition-all duration-500 ease-in-out p-3 overflow-y-auto  flex flex-col h-full whitespace-nowrap`}
         >
           {isOpen && (
             <>
@@ -223,7 +224,7 @@ export default function Viewer() {
                       height={35}
                       className="pr-2"
                     />
-                    <span className="text-xl font-inter  text-slate-800">
+                    <span className="text-xl font-inter tracking-tighter  text-slate-800">
                       Clear Health
                     </span>
                   </div>
@@ -392,6 +393,9 @@ export default function Viewer() {
             </div>
           </header>
           <PDFLoader pdfUrl={selectedPdfUrl} />
+          <div className="rounded-md bg-slate-100 w-1/2 sticky bottom-5 m-auto min-w-44">
+            <TokenProgressBar />
+          </div>
         </div>
 
         <div

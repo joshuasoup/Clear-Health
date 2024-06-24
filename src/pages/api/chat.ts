@@ -28,14 +28,12 @@ async function handler(req: Request) {
 
   // Request a streaming chat completion from OpenAI
   const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
+    model:  'gpt-4',
     stream: true,
     messages: updatedMessages,
   });
-
   // Stream the response
   const stream = OpenAIStream(response);
-  console.log(stream)
   return new StreamingTextResponse(stream);
 }
 

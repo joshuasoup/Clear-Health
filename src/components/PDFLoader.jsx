@@ -3,7 +3,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import Image from "next/image";
 import RightArrow from "../assets/1.png";
 import LeftArrow from "../assets/2.png";
-import medicalLogo from "../assets/mock up logo (2).png";
+import medicalLogo from "../assets/clearhealthlogo.png";
 import "../../node_modules/react-pdf/dist/esm/Page/TextLayer.css";
 import "../../node_modules/react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "../styles/globals.css";

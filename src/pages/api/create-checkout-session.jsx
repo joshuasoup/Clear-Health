@@ -10,7 +10,7 @@ export default async (req, res) => {
 
   await client.connect();
   const db = client.db("userdata");
-  const users = db.collection("PDFs");
+  const users = db.collection("Users");
 
   const user = await users.findOne({ clerkUserId: userId });
 

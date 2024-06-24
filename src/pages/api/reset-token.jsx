@@ -11,9 +11,9 @@ const resetTokenUsage = async () => {
       { $set: { tokensUsed: 0 } }
     );
 
-    console.log("Token usage reset for all users");
+    return "Token usage reset for all users";
   } catch (error) {
-    console.error("Failed to reset token usage:", error);
+    return `Failed to reset token usage:, ${error}`;
   }
 };
 
@@ -22,16 +22,15 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const apiKey = req.headers["x-api-key"];
+  const apiKey = req.body;
   if (apiKey !== process.env.VALIDATION_API_KEY) {
     return res.status(403).json({ error: "Forbidden" });
   }
 
+  const response = await resetTokenUsage();
   try {
-    await resetTokenUsage();
-    res.status(200).json({ message: "Token usage reset successfully" });
+    res.status(200).json({ message: response });
   } catch (error) {
-    console.error("Server error:", error);
-    res.status(500).json({ error: "Failed to reset token usage" });
+    res.status(500).json({ error: response });
   }
 }

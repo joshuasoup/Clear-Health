@@ -61,7 +61,7 @@ export default function ChatComponent({ callhandleClick }) {
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="bg-white rounded-md px-4 py-3 shadow-md bottom-0">
           <textarea
-            className="resize-none w-full border-0 overflow-y-hidden bottom-0 align-middle p-0"
+            className="resize-none w-full border-0 overflow-y-hidden bottom-0 align-middle p-0 focus:ring-transparent"
             value={input}
             placeholder="Ask Anything..."
             onChange={handleInputChange}

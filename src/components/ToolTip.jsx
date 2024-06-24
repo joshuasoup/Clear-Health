@@ -1,10 +1,9 @@
 // components/ToolTip.js
 import React, { useState, useEffect, forwardRef, useRef } from "react";
 import "../styles/tooltip.css";
-import { useChat } from "ai/react";
-import { tool } from "ai";
 import DOMPurify from "dompurify";
 import parse from "html-react-parser";
+import { useToken } from "../contexts/TokenContext";
 
 const ToolTip = forwardRef(({ tooltipText }, ref) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,6 +14,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
   const tooltipRef = useRef();
   const [source, setSource] = useState(null);
   const baseToolTipHeight = 40;
+  const { fetchTokenUsage } = useToken();
 
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -126,6 +126,24 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
     }
   };
 
+  async function postTokenUsage(tokenCount) {
+    const formData = new FormData();
+    console.log("hello");
+    formData.append("tokens", tokenCount);
+
+    const response = await fetch("/api/update-token-usage", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ tokenCount }),
+    });
+
+    const result = await response.json();
+    console.log(result);
+    return result;
+  }
+
   const handleExplainSubmit = async (e) => {
     e.preventDefault();
     setContentMode("text");
@@ -159,6 +177,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let result = "";
+      let tokens = 0;
 
       while (true) {
         const { value, done } = await reader.read();
@@ -178,13 +197,20 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
             const message = match[1].replace("\\n", "");
             console.log(message); // Logs each extracted message
             result += message;
-            ``;
+            tokens += 1;
           }
         });
 
         // Assuming setExplanation is a function that updates your component or handles state
         setExplanation(sanitizeHTML(boldText(hyperlinkURLs(result))));
       }
+
+      // Post token usage and then fetch the updated token usage
+      await postTokenUsage(tokens);
+      console.log(tokens);
+
+      // Call fetchTokenUsage after posting token usage
+      fetchTokenUsage();
     }
   };
 

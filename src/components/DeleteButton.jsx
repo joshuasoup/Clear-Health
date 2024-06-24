@@ -14,9 +14,8 @@ const DeleteButton = ({ fileKey, upSubmission }) => {
   };
 
   const deleteFile = async (key) => {
-    const url = "/api/delete";
+    const url = "/api/delete-pdf";
     const body = JSON.stringify({ key });
-    console.log(body);
 
     try {
       const response = await fetch(url, {

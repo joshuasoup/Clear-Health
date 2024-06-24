@@ -1,8 +1,8 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getAuth } from '@clerk/nextjs/server';
-import { IncomingForm } from 'formidable';
+import { getAuth } from "@clerk/nextjs/server";
+import { IncomingForm } from "formidable";
 import clientPromise from "../../lib/mongo/db";
-import fs from 'fs';
+import fs from "fs";
 
 // Initialize the S3 client with AWS SDK v3
 const s3Client = new S3Client({
@@ -22,7 +22,7 @@ export const config = {
 async function uploadFileToS3(file) {
   const fileContent = fs.readFileSync(file[0].filepath);
   const key = file[0].originalFilename; // Ensure this is unique if necessary
-  
+
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     Key: key,
@@ -44,18 +44,19 @@ export default async function handler(req, res) {
 
   const form = new IncomingForm({ keepExtensions: true });
 
-  const parseForm = () => new Promise((resolve, reject) => {
-    form.parse(req, (err, fields, files) => {
-      if (err) reject(err);
-      else resolve({ fields, files });
+  const parseForm = () =>
+    new Promise((resolve, reject) => {
+      form.parse(req, (err, fields, files) => {
+        if (err) reject(err);
+        else resolve({ fields, files });
+      });
     });
-  });
 
   try {
     const { fields, files } = await parseForm();
     const pdfFile = files.file;
     if (!pdfFile) {
-      return res.status(400).json({ error: 'No PDF file uploaded' });
+      return res.status(400).json({ error: "No PDF file uploaded" });
     }
 
     // Upload the file to S3 and get the key
@@ -68,7 +69,7 @@ export default async function handler(req, res) {
 
     const client = await clientPromise;
     const database = client.db("userdata");
-    const usersCollection = database.collection("PDFs");
+    const usersCollection = database.collection("Users");
 
     // Update database with the metadata including the S3 key
     await usersCollection.updateOne(
@@ -78,9 +79,15 @@ export default async function handler(req, res) {
     );
 
     // Send a response including the S3 key
-    res.status(200).json({ message: 'PDF uploaded and metadata added successfully', userId: userId, fileKey });
+    res
+      .status(200)
+      .json({
+        message: "PDF uploaded and metadata added successfully",
+        userId: userId,
+        fileKey,
+      });
   } catch (e) {
     console.error("Server error:", e);
-    res.status(500).json({ error: 'Failed to upload PDF' });
+    res.status(500).json({ error: "Failed to upload PDF" });
   }
 }

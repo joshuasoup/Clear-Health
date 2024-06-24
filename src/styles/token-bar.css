@@ -1,0 +1,22 @@
+.container {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progressBar {
+    background-color: #cacaca;
+    text-align: center;
+    line-height: 24px;
+    color: white;
+    border-radius: 8px;
+}
+
+.label {
+    width: 100%;
+    text-align: center;
+    color: black;
+    margin: auto;
+    
+}

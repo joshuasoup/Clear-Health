@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import medicalLogo from "../assets/mock up logo (1).png";
+import medicalLogo from "../assets/clearhealthlogo.png";
 import { useUser } from "@clerk/clerk-react";
 
 const Navbar = () => {
@@ -19,7 +19,9 @@ const Navbar = () => {
             <div className="flex items-center text-gray-800 text-xl font-bold">
               {/* Replace the src with your logo image path and adjust width and height accordingly */}
               <Image src={medicalLogo} alt="Logo" width={40} height={40} />
-              <span className="ml-3 font-inter">Clear Health</span>
+              <span className="ml-3 font-inter  font-semibold tracking-tighter">
+                Clear Health
+              </span>
             </div>
           </Link>
 

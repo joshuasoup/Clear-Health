@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Script from "next/script";
+import { TokenProvider } from "../contexts/TokenContext";
 
 export const metadata = {
   title: "ClearHealth",
@@ -17,11 +18,13 @@ const RootLayout = ({ children }) => {
         src="https://js.stripe.com/v3/pricing-table.js"
         strategy="lazyOnload"
       />
-      <html lang="en">
-        <body>
-          <main className="app">{children}</main>
-        </body>
-      </html>
+      <TokenProvider>
+        <html lang="en">
+          <body>
+            <main className="app">{children}</main>
+          </body>
+        </html>
+      </TokenProvider>
     </ClerkProvider>
   );
 };

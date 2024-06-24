@@ -23,7 +23,7 @@ const UploadButton = (props) => {
     formData.append("file", selectedFile);
     setIsUploading(true);
     try {
-      const response = await fetch("/api/pdf", {
+      const response = await fetch("/api/upload-pdf", {
         method: "POST",
         body: formData,
       });

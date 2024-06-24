@@ -7,19 +7,16 @@ export default async function handler(req, res) {
   }
 
   try {
+    const { tokenCount } = req.body;
     const { userId } = getAuth(req);
+
     const client = await clientPromise;
     const database = client.db("userdata");
     const usersCollection = database.collection("Users");
 
-    // Extracting tokens from formData
-    const formData = await req.formData();
-    const tokens = parseInt(formData.get("tokens"), 10);
-
-    // Update the user document with the new tokens
     await usersCollection.updateOne(
       { clerkUserId: userId },
-      { $inc: { tokensUsed: tokens } }, // Using $inc to increment the tokens
+      { $inc: { tokensUsed: tokenCount } },
       { upsert: true }
     );
 
@@ -27,7 +24,7 @@ export default async function handler(req, res) {
       message: "Tokens Updated Successfully",
     });
   } catch (error) {
-    console.log("Error updating tokens:", error);
-    res.status(500).json({ error: "Failed to update tokens" });
+    console.error("Server error:", error);
+    res.status(500).json({ error: "Failed to handle the request" });
   }
 }
