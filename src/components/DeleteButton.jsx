@@ -53,7 +53,7 @@ const DeleteButton = ({ fileKey, upSubmission }) => {
       </button>
 
       {isModalVisible && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-40">
           <div className="bg-menu p-10 rounded-lg shadow-lg relative w-1/2">
             <button
               className="absolute top-4 right-4 text-black font-semibold text-xl bg-menu"

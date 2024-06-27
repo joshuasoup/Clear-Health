@@ -6,6 +6,7 @@ module.exports = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/flowbite-react/lib/**/*.js",
   ],
   plugins: [
     require("flowbite/plugin")
@@ -45,6 +46,10 @@ module.exports = {
       },
       flex: {
         7: '7 1 0%', // flex-grow: 7; flex-shrink: 1; flex-basis: 0%;
+      },
+      zIndex: {
+        5: '5',
+        6: '6',
       },
     },
   },

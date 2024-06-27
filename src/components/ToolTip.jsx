@@ -68,9 +68,9 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
       }
     };
 
-    document.addEventListener("selectionchange", handleSelectionChange);
+    document.addEventListener("mouseup", handleSelectionChange);
     return () => {
-      document.removeEventListener("selectionchange", handleSelectionChange);
+      document.addEventListener("mouseup", handleSelectionChange);
     };
   }, [ref, baseToolTipHeight]);
 
@@ -128,7 +128,6 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
 
   async function postTokenUsage(tokenCount) {
     const formData = new FormData();
-    console.log("hello");
     formData.append("tokens", tokenCount);
 
     const response = await fetch("/api/update-token-usage", {
@@ -164,7 +163,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
         left: rect.left - container.left + window.scrollX,
       });
 
-      const response = await fetch("/api/chat", {
+      const response = await fetch("/api/openai-free-connection", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -207,8 +206,6 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
 
       // Post token usage and then fetch the updated token usage
       await postTokenUsage(tokens);
-      console.log(tokens);
-
       // Call fetchTokenUsage after posting token usage
       fetchTokenUsage();
     }
@@ -243,8 +240,8 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
           backgroundColor: "white",
           color: "black",
           borderRadius: "4px",
-          zIndex: 9,
-          maxWidth: "435px",
+          zIndex: 5,
+          maxWidth: "500px",
           border: "1px solid rgba(220, 220, 220, 0.7)",
           boxShadow:
             "0 2px 4px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.15)",

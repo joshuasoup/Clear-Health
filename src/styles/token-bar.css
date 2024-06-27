@@ -1,8 +1,9 @@
 .container {
     width: 100%;
     border-radius: 8px;
-    overflow: hidden;
     position: relative;
+    height: 20px;
+    margin: auto;
 }
 
 .progressBar {
@@ -18,5 +19,5 @@
     text-align: center;
     color: black;
     margin: auto;
-    
+
 }

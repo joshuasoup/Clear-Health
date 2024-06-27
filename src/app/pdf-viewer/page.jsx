@@ -54,6 +54,8 @@ export default function Viewer() {
   const [activeItemKey, setActiveItemKey] = useState(null);
   const [renamingKey, setRenamingKey] = useState(null);
   const [newName, setNewName] = useState("");
+  const parentRef = useRef(null);
+  const [isSubscribed, setIsSubscribed] = useState(false); //remove later temporary
 
   const startRenaming = (key, currentName) => {
     setRenamingKey(key);
@@ -325,12 +327,14 @@ export default function Viewer() {
               </div>
               <hr className="m-3" />
               <UserMenu />
-              {/* <button
-                className="special-button mt-2"
-                onClick={handleUpgradeClick}
-              >
-                Upgrade
-              </button> */}
+              {!isSubscribed && (
+                <button
+                  className="special-button mt-2"
+                  onClick={handleUpgradeClick}
+                >
+                  Upgrade
+                </button>
+              )}
             </>
           )}
           <button
@@ -346,7 +350,7 @@ export default function Viewer() {
         </div>
 
         {/* Main content area for the PDF viewer */}
-        <div className="flex-7 mx-2 flex-col h-screen my-0 overflow-auto flex">
+        <div className="flex-7 mx-2 flex-col h-screen my-0 overflow-auto flex ">
           {/* top menubar */}
           <header className="p-3 flex justify-between items-center sticky top-0 left-0 bg-white z-10 max-h-pdfbar min-h-pdfbar font-inter">
             <h1>{title}</h1>
@@ -358,18 +362,16 @@ export default function Viewer() {
                 Upgrade
               </button> */}
               {modalOpen && (
-                <div>
-                  <div className="modal-background">
-                    <motion.div
-                      initial={{ y: 100, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ ease: "easeOut", duration: 0.5 }}
-                      className="modal-content w-200"
-                    >
-                      <PricingCatalog />
-                      <button onClick={handleCloseModal}>Close</button>
-                    </motion.div>
-                  </div>
+                <div className="modal-background ">
+                  <motion.div
+                    initial={{ y: 100, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ ease: "easeOut", duration: 0.5 }}
+                    className="modal-content w-200"
+                  >
+                    <PricingCatalog />
+                    <button onClick={handleCloseModal}>Close</button>
+                  </motion.div>
                 </div>
               )}
               {!showComponent && (
@@ -392,9 +394,13 @@ export default function Viewer() {
               </button>
             </div>
           </header>
-          <PDFLoader pdfUrl={selectedPdfUrl} />
-          <div className="rounded-md bg-slate-100 w-1/2 sticky bottom-5 m-auto min-w-44">
-            <TokenProgressBar />
+          <PDFLoader pdfUrl={selectedPdfUrl} className="z-20" />
+          <div
+            className="rounded-md bg-slate-100 w-1/2 sticky bottom-5 m-auto min-w-44 z-6"
+            style={{ maxWidth: "550px" }}
+            ref={parentRef}
+          >
+            <TokenProgressBar parentRef={parentRef} />
           </div>
         </div>
 

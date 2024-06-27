@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/pages/api/chat.jsx", "src/pages/api/chat.jsx", "src/pages/api/chat.jsx"  ],
+, "src/pages/api/openai-free-connection.jsx" ],
   "exclude": [
     "node_modules"
   ]

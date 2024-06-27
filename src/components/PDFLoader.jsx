@@ -22,7 +22,7 @@ const PDFLoader = ({ pdfUrl }) => {
     <button
       onClick={onClick}
       disabled={isDisabled}
-      className="p-2 rounded transition-transform duration-200 hover:scale-125 z-10"
+      className="p-2 rounded transition-transform duration-200 hover:scale-125 z-5"
     >
       <Image
         src={direction === "left" ? LeftArrow : RightArrow}
