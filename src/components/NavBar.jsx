@@ -35,8 +35,10 @@ const Navbar = () => {
             <Link href="/about">
               <h1 className="text-gray-700 hover:text-gray-900 px-3">About</h1>
             </Link>
-            <Link href="/blog">
-              <h1 className="text-gray-700 hover:text-gray-900 px-3">Blog</h1>
+            <Link href="/roadmap">
+              <h1 className="text-gray-700 hover:text-gray-900 px-3">
+                Roadmap
+              </h1>
             </Link>
           </div>
 
@@ -83,8 +85,8 @@ const Navbar = () => {
         <Link href="/about">
           <h1 className="block py-2 px-4 text-sm hover:bg-gray-200">About</h1>
         </Link>
-        <Link href="/blog">
-          <h1 className="block py-2 px-4 text-sm hover:bg-gray-200">Blog</h1>
+        <Link href="/roadmap">
+          <h1 className="block py-2 px-4 text-sm hover:bg-gray-200">Roadmap</h1>
         </Link>
         {/* Add additional mobile menu items here */}
       </div>

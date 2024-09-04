@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import fetch from 'node-fetch';
 
 const setupCronJob = () => {
-  cron.schedule("59 23 * * *", async () => {
+  cron.schedule("00 00 * * *", async () => {
   console.log("Token resetting at: 23:59");
 
   try {

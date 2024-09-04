@@ -1,7 +1,6 @@
-// pages/api/create-checkout-session.js
 import clientPromise from "../../lib/mongo/db";
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_TEST_KEY);
 
 export default async (req, res) => {
   const { userId } = req.body;
@@ -21,13 +20,13 @@ export default async (req, res) => {
     payment_method_types: ["card"],
     line_items: [
       {
-        price: "price_1P1FhzRquv3tbGOm5iZzT6A9", // Your Stripe Price ID
+        price: "price_1P1b0tRquv3tbGOmCwd9PMnV", // Your Stripe Price ID
         quantity: 1,
       },
     ],
     mode: "subscription",
-    success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+    success_url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
     metadata: { userId },
   });
 
