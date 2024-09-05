@@ -1,6 +1,5 @@
 import "../styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import Script from "next/script";
 import { TokenProvider } from "../contexts/TokenContext";
 
 export const metadata = {
@@ -13,11 +12,9 @@ export const metadata = {
 
 const RootLayout = ({ children }) => {
   return (
-    <ClerkProvider>
-      <Script
-        src="https://js.stripe.com/v3/pricing-table.js"
-        strategy="lazyOnload"
-      />
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    >
       <TokenProvider>
         <html lang="en">
           <body>

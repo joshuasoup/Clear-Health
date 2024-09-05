@@ -4,6 +4,7 @@ export default async function middleware(req) {
   console.log('Incoming request:', req.url);
   try {
     return await authMiddleware({
+
       publicRoutes: ["/", "/pricing", "/about"],
       ignoredRoutes: ["/((?!api|trpc))(_next.*|.+\.[\\w]+$)", "/api/reset-token"],
     })(req);
