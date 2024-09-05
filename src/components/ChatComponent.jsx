@@ -3,7 +3,6 @@ import { useChat } from "ai/react";
 import RightArrow from "../assets/1.png";
 import Image from "next/image";
 import defaultavatar from "../assets/avatar.png";
-import logo from "../assets/medical-logo.png";
 import "../styles/chat.css";
 
 export default function ChatComponent({ callhandleClick }) {
