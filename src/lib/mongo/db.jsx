@@ -11,7 +11,7 @@ if (!process.env.MONGODB_URL) {
   throw new Error("Please add your Mongo URI to .env.local");
 }
 
-if (process.env.NODE_ENV) {
+if (process.env.NODE_ENV == "development") {
   if (!global._mongoClientPromise) {
     client = new MongoClient(uri, options);
     global._mongoClientPromise = client.connect();
@@ -26,5 +26,4 @@ if (process.env.NODE_ENV) {
   });
 }
 
-// Export the MongoClient promise for use across your app
 export default clientPromise;
