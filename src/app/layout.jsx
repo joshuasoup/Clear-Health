@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { TokenProvider } from "../contexts/TokenContext";
+import { neobrutalism } from "@clerk/themes";
 
 export const metadata = {
   title: "ClearHealth",
@@ -12,7 +13,11 @@ export const metadata = {
 
 const RootLayout = ({ children }) => {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        baseTheme: neobrutalism,
+      }}
+    >
       <TokenProvider>
         <html lang="en">
           <body>

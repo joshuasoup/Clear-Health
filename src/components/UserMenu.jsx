@@ -57,7 +57,7 @@ const Menu = () => {
   return (
     <div className="menu-container" tabIndex="0">
       <div className="menu-bar" onClick={toggleMenu}>
-        <img src={profileImageUrl} alt="User avatar" className="avatar"/>
+        <img src={profileImageUrl} alt="User avatar" className="avatar" />
         {userName && <button className="user-name">{userName}</button>}
       </div>
       {isMenuOpen && (
