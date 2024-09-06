@@ -6,13 +6,11 @@ const options = {};
 let client;
 let clientPromise;
 
-// Ensure MongoDB URI is provided
+// Ensure MongoDB URI is set
 if (!process.env.MONGODB_URL) {
-  throw new Error("Please add your MongoDB URI to the .env file");
+  throw new Error("Please add your Mongo URI to .env.local");
 }
 
-// In development mode, use a global variable to preserve the client instance
-// during hot reloads caused by HMR (Hot Module Replacement).
 if (process.env.NODE_ENV) {
   if (!global._mongoClientPromise) {
     client = new MongoClient(uri, options);
@@ -20,17 +18,13 @@ if (process.env.NODE_ENV) {
   }
   clientPromise = global._mongoClientPromise;
 } else {
-  // In production mode, avoid using a global variable and create a new client instance.
+  // In production mode, create a new connection instance
   client = new MongoClient(uri, options);
-  clientPromise = client
-    .connect()
-    .then(() => {
-      console.log("Successfully connected to MongoDB in production mode");
-      return client;
-    })
-    .catch((err) => {
-      console.error("Failed to connect to MongoDB in production", err);
-      throw err;
-    });
+  clientPromise = client.connect().catch((err) => {
+    console.error("Failed to connect to MongoDB", err);
+    throw err; // Ensure any connection issues throw an error in production
+  });
 }
+
+// Export the MongoClient promise for use across your app
 export default clientPromise;
