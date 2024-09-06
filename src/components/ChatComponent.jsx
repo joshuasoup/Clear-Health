@@ -4,6 +4,7 @@ import RightArrow from "../assets/1.png";
 import Image from "next/image";
 import defaultavatar from "../assets/avatar.png";
 import "../styles/chat.css";
+import logo from "../assets/clearhealthlogo.png";
 
 export default function ChatComponent({ callhandleClick }) {
   const { messages, input, handleInputChange, handleSubmit } = useChat();

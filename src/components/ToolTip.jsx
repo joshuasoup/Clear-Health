@@ -139,7 +139,6 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
     });
 
     const result = await response.json();
-    console.log(result);
     return result;
   }
 
@@ -181,7 +180,6 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
       while (true) {
         const { value, done } = await reader.read();
         if (done) {
-          console.log("Stream completed.");
           break;
         }
 
@@ -194,7 +192,6 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
           const match = line.match(/"([^"]+)"/);
           if (match) {
             const message = match[1].replace("\\n", "");
-            console.log(message); // Logs each extracted message
             result += message;
             tokens += 1;
           }
