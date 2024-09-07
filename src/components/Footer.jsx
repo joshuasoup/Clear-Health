@@ -3,7 +3,7 @@ import "../styles/globals.css";
 
 const Footer = () => {
   return (
-    <footer className="bg-footerBackground text-white pt-10 pb-6 h-44 px-16 sticky bottom-0">
+    <footer className="bg-white text-white pt-10 pb-8 h-44 px-20 sticky bottom-0">
       <div className="container mx-auto h-full relative">
         {/* Top section with links and social icons */}
         <div className="flex flex-wrap justify-between items-center">
@@ -41,7 +41,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom section with copyright */}
-        <div className="border-t border-gray-700 pt-6 text-right  w-full absolute bottom-0">
+        <div className="border-t border-gray-300 pt-6 text-right  w-full absolute bottom-0">
           <p className="text-footer footText">
             &copy; {new Date().getFullYear()} Clear Health. All rights reserved.
           </p>

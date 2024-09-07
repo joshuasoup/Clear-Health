@@ -27,17 +27,17 @@ const Navbar = () => {
 
           {/* Centered navigation links */}
           <div className="flex-1 flex justify-center items-center space-x-4">
-            <Link href="/pricing">
-              <h1 className="text-gray-700 hover:text-gray-900 px-3">
-                Pricing
-              </h1>
-            </Link>
             <Link href="/about">
               <h1 className="text-gray-700 hover:text-gray-900 px-3">About</h1>
             </Link>
             <Link href="/roadmap">
               <h1 className="text-gray-700 hover:text-gray-900 px-3">
                 Roadmap
+              </h1>
+            </Link>
+            <Link href="/pricing">
+              <h1 className="text-gray-700 hover:text-gray-900 px-3">
+                Pricing
               </h1>
             </Link>
           </div>

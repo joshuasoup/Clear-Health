@@ -4,6 +4,7 @@ import "../styles/tooltip.css";
 import DOMPurify from "dompurify";
 import parse from "html-react-parser";
 import { useToken } from "../contexts/TokenContext";
+import { motion } from "framer-motion";
 
 const ToolTip = forwardRef(({ tooltipText }, ref) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -227,7 +228,11 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
 
   return (
     isVisible && (
-      <div
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.3 }}
         style={{
           position: "absolute",
           top: `${position.top}px`,
@@ -322,7 +327,11 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
                   </div>
                 ))}
                 <span
-                  style={{ fontSize: "11px", color: "gray", marginTop: "10px" }}
+                  style={{
+                    fontSize: "11px",
+                    color: "gray",
+                    marginTop: "10px",
+                  }}
                 >
                   Definitions retrieved from {source}
                 </span>
@@ -347,7 +356,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
             )}
           </div>
         )}
-      </div>
+      </motion.div>
     )
   );
 });

@@ -6,7 +6,7 @@ export default async function middleware(req) {
     return await authMiddleware({
 
       publicRoutes: ["/", "/pricing", "/about"],
-      ignoredRoutes: ["/((?!api|trpc))(_next.*|.+\.[\\w]+$)", "/api/reset-token"],
+      ignoredRoutes: ["/((?!api|trpc))(_next.*|.+\.[\\w]+$)", "/api/reset-token", ],
     })(req);
   } catch (error) {
     console.error('Middleware error:', error);

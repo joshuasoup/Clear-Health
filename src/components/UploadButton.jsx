@@ -4,6 +4,7 @@ import "../styles/globals.css";
 import "../styles/viewer.css";
 import Image from "next/image";
 import plus from "../assets/plus.png";
+import pdfIcon from "../assets/pdf-icon.png"; // Add a PDF icon image in your assets
 
 const UploadButton = (props) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -34,7 +35,6 @@ const UploadButton = (props) => {
       const result = await response.json();
       console.log(result);
       setIsUploading(false);
-      alert("File uploaded successfully");
       setIsModalVisible(false);
       setSelectedFile(null);
       if (props.handleAction) {
@@ -42,7 +42,6 @@ const UploadButton = (props) => {
       }
     } catch (error) {
       console.error("Error uploading file:", error);
-      alert("Error uploading file");
     }
   };
 
@@ -52,6 +51,10 @@ const UploadButton = (props) => {
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
+    setSelectedFile(null);
+  };
+
+  const handleRemoveFile = () => {
     setSelectedFile(null);
   };
 
@@ -68,6 +71,12 @@ const UploadButton = (props) => {
 
       {isModalVisible && (
         <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-40">
+          <button
+            className="absolute top-4 right-6 text-white font-semibold text-3xl hover:text-slate-300"
+            onClick={handleCloseModal}
+          >
+            &times;
+          </button>
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -75,12 +84,6 @@ const UploadButton = (props) => {
             transition={{ duration: 0.3 }}
             className="bg-menu p-10 rounded-lg shadow-lg relative w-1/2"
           >
-            <button
-              className="absolute top-4 right-4 text-black font-semibold text-xl bg-menu"
-              onClick={handleCloseModal}
-            >
-              &times;
-            </button>
             {!isUploading && !selectedFile && (
               <label
                 htmlFor="dropzone-file"
@@ -121,16 +124,38 @@ const UploadButton = (props) => {
             )}
 
             {!isUploading && selectedFile && (
-              <div className="flex flex-col items-center justify-center">
-                <h1>{selectedFile ? selectedFile.name : "No file selected"}</h1>
+              <div className="flex flex-col items-center justify-center space-y-4">
+                <Image
+                  src={pdfIcon}
+                  alt="pdf icon"
+                  width={40}
+                  height={40}
+                  className="mb-2"
+                />
+                <h2 className="text-lg font-semibold">{selectedFile.name}</h2>
+                <p className="text-sm text-gray-600">
+                  {`${(selectedFile.size / 1024 / 1024).toFixed(2)} MB`}
+                </p>
+                <div className="w-full">
+                  <button
+                    className=" text-red-500 hover:text-red-700 font-medium mr-6"
+                    onClick={handleRemoveFile}
+                  >
+                    Remove File
+                  </button>
+                  <button
+                    className={` px-4 py-2${
+                      isUploading ? "bg-gray-400" : "bg-red-600"
+                    } text-black rounded-md hover:bg-red-700 font-medium special-button ml-6`}
+                    onClick={handleSubmit}
+                    disabled={isUploading}
+                    style={{ fontWeight: "400" }}
+                  >
+                    {isUploading ? "Uploading..." : "Upload File"}
+                  </button>
+                </div>
               </div>
             )}
-            <button
-              className="mt-4 px-4 py-2 bg-red text-white rounded-md hover:bg-red-700 font-medium"
-              onClick={handleSubmit}
-            >
-              Upload File
-            </button>
           </motion.div>
         </div>
       )}

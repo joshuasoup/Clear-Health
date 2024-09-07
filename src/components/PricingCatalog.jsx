@@ -57,7 +57,7 @@ const PricingCatalog = () => {
     <div className="flex flex-row gap-2 h-catalog">
       {/* Free Plan Card */}
       <motion.div
-        className="bg-white rounded-xl shadow-xl py-8 px-8 flex flex-col w-catalog border items-start justify-between"
+        className="bg-white rounded-md shadow-xl py-8 px-8 flex flex-col w-catalog border items-start justify-between"
         style={{ height: "100%" }}
         initial="hidden"
         animate="visible"
@@ -91,7 +91,7 @@ const PricingCatalog = () => {
 
       {/* Unlimited Plan Card */}
       <motion.div
-        className="bg-white rounded-xl shadow-xl py-8 px-8 flex flex-col w-catalog border items-start justify-between"
+        className="bg-white rounded-md shadow-xl py-8 px-8 flex flex-col w-catalog border items-start justify-between"
         style={{ height: "100%" }}
         initial="hidden"
         animate="visible"

@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import garbagecan from "../assets/garbagecan.png";
+import warningIcon from "../assets/warning.png";
+import { motion } from "framer-motion";
 
 const DeleteButton = ({ fileKey, upSubmission }) => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleOpenModal = () => {
-    setModalVisible(true);
+    setModalVisible(!isModalVisible);
+    console.log("open");
   };
 
   const handleCloseModal = () => {
     setModalVisible(false);
+    console.log("here");
   };
 
   const deleteFile = async (key) => {
@@ -53,17 +57,53 @@ const DeleteButton = ({ fileKey, upSubmission }) => {
       </button>
 
       {isModalVisible && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-40">
-          <div className="bg-menu p-10 rounded-lg shadow-lg relative w-1/2">
-            <button
-              className="absolute top-4 right-4 text-black font-semibold text-xl bg-menu"
-              onClick={handleCloseModal}
-            >
-              &times; {/* Close Button */}
-            </button>
-            <p>Are you sure you want to delete this file?</p>
-            <button onClick={() => deleteFile(fileKey)}>Delete</button>
-          </div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-40">
+          <button
+            className="absolute top-4 right-6 text-white font-semibold text-3xl hover:text-slate-300"
+            onClick={handleCloseModal}
+          >
+            &times;
+          </button>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative"
+          >
+            {/* Close Button */}
+
+            {/* Warning Icon */}
+            <div className="flex justify-center">
+              <Image src={warningIcon} alt="Warning" width={50} height={50} />
+            </div>
+
+            {/* Modal Title */}
+            <h2 className="text-xl font-semibold text-center text-gray-800 mb-2">
+              Are you sure?
+            </h2>
+
+            {/* Modal Description */}
+            <p className="text-gray-600 text-center mb-6">
+              This action cannot be undone.
+            </p>
+
+            {/* Buttons */}
+            <div className="flex justify-center space-x-4">
+              <button
+                className="px-6 py-2 bg-red text-white rounded-md hover:bg-rose-500 transition-all duration-300"
+                onClick={() => deleteFile(fileKey)}
+              >
+                Delete File
+              </button>
+              <button
+                className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-all duration-300"
+                onClick={handleCloseModal}
+              >
+                Cancel
+              </button>
+            </div>
+          </motion.div>
         </div>
       )}
     </>
