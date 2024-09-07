@@ -139,3 +139,8 @@ hr {
   height: 1px;
   background-color: #dddddd;
 }
+
+.footText {
+  font-weight: 300;
+  /* Light font weight */
+}

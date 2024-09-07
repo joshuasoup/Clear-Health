@@ -9,9 +9,9 @@ const Home = () => {
     <div>
       <Navbar />
       <motion.div
-        initial={{ y: 100, opacity: 0 }}
+        initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ ease: "easeOut", duration: 1 }}
+        transition={{ ease: "easeOut", duration: 0.5 }}
       >
         <section className="w-full flex-center flex-col">
           <h1 className="font-inter text-6xl pt-20 font-semibold py-10 tracking-tighter max-w-4xl text-center mx-auto px-8">

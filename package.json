@@ -15,6 +15,7 @@
     "@aws-sdk/s3-request-presigner": "^3.540.0",
     "@clerk/nextjs": "^4.29.9",
     "@clerk/themes": "^2.1.27",
+    "@fortawesome/fontawesome-free": "^6.6.0",
     "@popperjs/core": "^2.11.8",
     "ai": "^3.1.14",
     "aws-sdk": "^2.1585.0",

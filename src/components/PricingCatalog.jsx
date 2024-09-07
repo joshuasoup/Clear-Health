@@ -1,6 +1,7 @@
+import React from "react";
 import { useRouter } from "next/navigation";
-import { useUser, useClerk, UserButton } from "@clerk/clerk-react";
-
+import { useUser } from "@clerk/clerk-react";
+import { motion } from "framer-motion";
 const FeatureItem = ({ text }) => (
   <div className="flex items-center gap-3 my-3">
     <svg
@@ -46,11 +47,21 @@ const PricingCatalog = () => {
     }
   };
 
+  // Animation variants
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   return (
-    <div className="flex flex-row gap-2">
-      <div
-        className="bg-white rounded-xl shadow-xl py-8 px-8 flex flex-col w-catalog border items-start justify-between "
+    <div className="flex flex-row gap-2 h-catalog">
+      {/* Free Plan Card */}
+      <motion.div
+        className="bg-white rounded-xl shadow-xl py-8 px-8 flex flex-col w-catalog border items-start justify-between"
         style={{ height: "100%" }}
+        initial="hidden"
+        animate="visible"
+        variants={cardVariants}
       >
         <div>
           <div className="left-0 text-left">
@@ -62,25 +73,29 @@ const PricingCatalog = () => {
               <span className="text-xl text-gray-500 font-medium">/month</span>
             </p>
           </div>
-          <div className="mt-6 mb-3 text-left ">
+          <div className="mt-6 mb-3 text-left">
             <FeatureItem text="3 PDF Limit" />
             <FeatureItem text="AI Summaries" />
             <FeatureItem text="AI Response Limit" />
             <FeatureItem text="AI Chat" />
           </div>
         </div>
-
         <button
-          className="bg-white hover:bg-slate-100 border  font-normal px-8 h-12 rounded-md transition duration-300 w-full bottom-0 mt-4"
+          className="bg-white hover:bg-slate-100 border font-normal px-8 h-12 rounded-md transition duration-300 w-full bottom-0 mt-4"
           onClick={handleFreeClick}
+          whileHover="hover"
         >
           Try Now
         </button>
-      </div>
+      </motion.div>
 
-      <div
+      {/* Unlimited Plan Card */}
+      <motion.div
         className="bg-white rounded-xl shadow-xl py-8 px-8 flex flex-col w-catalog border items-start justify-between"
         style={{ height: "100%" }}
+        initial="hidden"
+        animate="visible"
+        variants={cardVariants}
       >
         <div>
           <div className="left-0 text-left">
@@ -92,7 +107,7 @@ const PricingCatalog = () => {
               <span className="text-xl text-gray-500 font-medium">/month</span>
             </p>
           </div>
-          <div className="mt-6 mb-3 text-left ">
+          <div className="mt-6 mb-3 text-left">
             <FeatureItem text="Unlimited Document Handling" />
             <FeatureItem text="Learning Mode" />
             <FeatureItem text="AI Summaries" />
@@ -105,10 +120,11 @@ const PricingCatalog = () => {
         <button
           className="bg-red hover:bg-rose-600 text-white font-normal px-8 h-12 rounded-md transition duration-300 w-full mt-4"
           onClick={handleButtonClick}
+          whileHover="hover"
         >
           Subscribe
         </button>
-      </div>
+      </motion.div>
     </div>
   );
 };

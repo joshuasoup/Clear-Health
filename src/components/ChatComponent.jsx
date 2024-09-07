@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useChat } from "ai/react";
 import RightArrow from "../assets/1.png";
 import Image from "next/image";
@@ -7,7 +7,9 @@ import "../styles/chat.css";
 import logo from "../assets/clearhealthlogo.png";
 
 export default function ChatComponent({ callhandleClick }) {
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const { messages, input, handleInputChange, handleSubmit, setMessages } =
+    useChat();
+  const chatContainerRef = useRef(null); // Ref to the chat container
 
   // Function to adjust the height of the textarea dynamically
   const adjustHeight = (element) => {
@@ -20,6 +22,32 @@ export default function ChatComponent({ callhandleClick }) {
     }
   };
 
+  // Scroll to the bottom whenever messages change
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      setTimeout(() => {
+        chatContainerRef.current.scrollTop =
+          chatContainerRef.current.scrollHeight;
+        console.log("Scroll height:", chatContainerRef.current.scrollHeight);
+        console.log("Scroll top:", chatContainerRef.current.scrollTop);
+      }, 90);
+    }
+  };
+
+  useEffect(() => {
+    const savedMessages = localStorage.getItem("chatMessages");
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages)); // Load saved messages
+    }
+  }, [setMessages]);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem("chatMessages", JSON.stringify(messages)); // Save messages
+      scrollToBottom(); // Scroll to the bottom when new messages arrive
+    }
+  }, [messages]);
+
   return (
     <div className="flex flex-col py-0 stretch h-full w-full justify-between border bg-menu px-4">
       <button
@@ -28,7 +56,12 @@ export default function ChatComponent({ callhandleClick }) {
       >
         <Image src={RightArrow} alt="Next" width={30} height={30} />
       </button>
-      <div className="flex flex-col flex-1 overflow-y-auto">
+
+      {/* Add ref to the chat container */}
+      <div
+        className="flex flex-col flex-1 overflow-y-auto"
+        ref={chatContainerRef}
+      >
         {messages.map((m) => (
           <div
             key={m.id}
@@ -39,21 +72,33 @@ export default function ChatComponent({ callhandleClick }) {
                 <Image
                   src={defaultavatar}
                   alt="User Icon"
-                  style={{ width: "30px" }}
+                  style={{ minWidth: "30px", maxWidth: "30px" }}
                   className="rounded-full mt-1"
                 />
               ) : (
                 <Image
                   src={logo}
                   alt="Other Icon"
-                  style={{ width: "30px" }}
+                  style={{ minWidth: "30px", maxWidth: "30px" }}
                   className="mt-1"
                 />
               )}
             </div>
-            <div className="bg-white rounded-md py-3 px-3 flex-1 text-left">
-              {m.content}
-            </div>
+            {m.role === "user" ? (
+              <div
+                className="bg-userchat rounded-md py-3 px-3 flex-1 text-left"
+                style={{ minWidth: "280px", minHeight: "44px" }}
+              >
+                {m.content}
+              </div>
+            ) : (
+              <div
+                className="bg-white rounded-md py-3 px-3 flex-1 text-left"
+                style={{ minWidth: "280px", minHeight: "44px" }}
+              >
+                {m.content}
+              </div>
+            )}
           </div>
         ))}
       </div>

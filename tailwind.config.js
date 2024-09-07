@@ -19,12 +19,19 @@ module.exports = {
       colors:{
         menu: '#fafafc',
         red: '#ff0000',
-        hover: '#ebebeb'
+        hover: '#ebebeb',
+        userchat: '#f4f4f4',
+        footer: '#000000',
+        footerBackground: '#f4f4f4',
+        footerHover: '#626262',
       },
       width: {
         115: '115px',
-        catalog: '420px',
+        catalog: '380px',
         menu: "240px",
+      },
+      height: {
+        catalog: '560px',
       },
       backgroundImage: {
         'fade-left': 'linear-gradient(to right, rgba(255, 255, 255, 0), rgba(250, 250, 252, 0.5))', 
