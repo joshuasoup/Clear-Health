@@ -3,13 +3,16 @@ import "../styles/globals.css";
 
 const Footer = () => {
   return (
-    <footer className="bg-white text-white pt-10 pb-8 h-44 px-20 sticky bottom-0">
+    <footer className="bg-white text-white pt-10 pb-8 min-h-44 px-20  bottom-0">
       <div className="container mx-auto h-full relative">
         {/* Top section with links and social icons */}
         <div className="flex flex-wrap justify-between items-center">
           {/* Quick Links */}
           <div className="flex space-x-6">
-            <a href="#" className="text-footer hover:text-footerHover footText">
+            <a
+              href="/about"
+              className="text-footer hover:text-footerHover footText"
+            >
               About
             </a>
             <a href="#" className="text-footer hover:text-footerHover footText">
