@@ -31,7 +31,6 @@ async function uploadFileToS3(file) {
   try {
     const command = new PutObjectCommand(params);
     await s3Client.send(command);
-    // Instead of returning a URL, return the key
     return key; // Return the S3 key of the uploaded file
   } catch (err) {
     console.error("Error uploading file to S3:", err.message, err.stack);
@@ -59,7 +58,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "No PDF file uploaded" });
     }
 
-    // Upload the file to S3 and get the key
+    // Step 1: Upload the file to S3 and get the key
     const fileKey = await uploadFileToS3(pdfFile);
 
     const pdfMetadata = {
@@ -67,25 +66,22 @@ export default async function handler(req, res) {
       key: fileKey, // Store the S3 key instead of the URL
     };
 
+    // Step 2: Update MongoDB with the metadata including the S3 key
     const client = await clientPromise;
     const database = client.db("userdata");
     const usersCollection = database.collection("Users");
 
-    // Update database with the metadata including the S3 key
     await usersCollection.updateOne(
       { clerkUserId: userId },
       { $push: { pdfs: pdfMetadata } },
       { upsert: true }
     );
 
-    // Send a response including the S3 key
-    res
-      .status(200)
-      .json({
-        message: "PDF uploaded and metadata added successfully",
-        userId: userId,
-        fileKey,
-      });
+    res.status(200).json({
+      message: "PDF uploaded and metadata added successfully",
+      userId: userId,
+      fileKey,
+    });
   } catch (e) {
     console.error("Server error:", e);
     res.status(500).json({ error: "Failed to upload PDF" });

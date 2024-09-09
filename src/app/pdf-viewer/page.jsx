@@ -16,6 +16,8 @@ import garbagecan from "../../assets/garbagecan.png";
 import pencil from "../../assets/pencil.png";
 import DeleteButton from "../../components/DeleteButton";
 import TokenProgressBar from "../../components/TokenProgressBar";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const PDFLoader = dynamic(() => import("../../components/PDFLoader"), {
   ssr: false,
@@ -53,9 +55,16 @@ export default function Viewer() {
   const dynamicWidth = userWidth ?? (showComponent ? "350px" : "0px");
   const [activeItemKey, setActiveItemKey] = useState(null);
   const [renamingKey, setRenamingKey] = useState(null);
+  const [currentFileKey, setCurrentFileKey] = useState(null);
   const [newName, setNewName] = useState("");
   const parentRef = useRef(null);
   const [isSubscribed, setIsSubscribed] = useState(false); //remove later temporary
+  const { user } = useUser();
+  const router = useRouter();
+  if (!user) {
+    console.log("no user");
+    router.push("/");
+  }
 
   const startRenaming = (key, currentName) => {
     setRenamingKey(key);
@@ -138,6 +147,7 @@ export default function Viewer() {
         console.log(data.presignedUrl);
         setSelectedPdfUrl(data.presignedUrl);
         toggleActive(key);
+        setCurrentFileKey(key);
       })
 
       .catch((error) => {
@@ -416,7 +426,10 @@ export default function Viewer() {
         >
           {showComponent && (
             <>
-              <ChatComponent callhandleClick={handleClick} />
+              <ChatComponent
+                callhandleClick={handleClick}
+                fileKey={currentFileKey}
+              />
               <div
                 onMouseDown={startResizing}
                 style={{

@@ -285,10 +285,14 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
             </button>
           </div>
         ) : (
-          <div
+          <motion.div
             style={{ textAlign: "left" }}
             className="px-3 py-1"
             ref={tooltipRef}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
           >
             {definitions.length > 0 && (
               <>
@@ -354,7 +358,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
                 </p>
               </div>
             )}
-          </div>
+          </motion.div>
         )}
       </motion.div>
     )

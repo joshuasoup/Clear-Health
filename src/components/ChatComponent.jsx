@@ -1,14 +1,19 @@
 import React, { useEffect, useRef } from "react";
 import { useChat } from "ai/react";
 import RightArrow from "../assets/1.png";
+import RefreshLogo from "../assets/3.png";
 import Image from "next/image";
 import defaultavatar from "../assets/avatar.png";
 import "../styles/chat.css";
 import logo from "../assets/clearhealthlogo.png";
 
-export default function ChatComponent({ callhandleClick }) {
+export default function ChatComponent({ callhandleClick, fileKey }) {
   const { messages, input, handleInputChange, handleSubmit, setMessages } =
-    useChat();
+    useChat({
+      body: {
+        fileKey,
+      },
+    });
   const chatContainerRef = useRef(null); // Ref to the chat container
 
   // Function to adjust the height of the textarea dynamically
@@ -34,6 +39,11 @@ export default function ChatComponent({ callhandleClick }) {
     }
   };
 
+  const refreshChat = () => {
+    localStorage.removeItem("chatMessages");
+    setMessages("");
+  };
+
   useEffect(() => {
     const savedMessages = localStorage.getItem("chatMessages");
     if (savedMessages) {
@@ -55,6 +65,9 @@ export default function ChatComponent({ callhandleClick }) {
         className="toggle-button hover:bg-gray-300 rounded-md mt-4 mb-2 w-full flex-row flex"
       >
         <Image src={RightArrow} alt="Next" width={30} height={30} />
+      </button>
+      <button onClick={refreshChat}>
+        <Image src={RefreshLogo} width={30} height={30} />
       </button>
 
       {/* Add ref to the chat container */}

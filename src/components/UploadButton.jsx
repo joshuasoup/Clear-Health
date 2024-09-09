@@ -20,28 +20,52 @@ const UploadButton = (props) => {
       alert("Please select a file first!");
       return;
     }
+
     const formData = new FormData();
     formData.append("file", selectedFile);
     setIsUploading(true);
+
     try {
-      const response = await fetch("/api/upload-pdf", {
+      // Step 1: Upload the file to S3 via /api/upload-pdf endpoint
+      const uploadResponse = await fetch("/api/upload-pdf", {
         method: "POST",
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error("Upload failed");
+      if (!uploadResponse.ok) {
+        throw new Error("S3 Upload failed");
       }
-      const result = await response.json();
-      console.log(result);
+
+      const uploadResult = await uploadResponse.json(); // Contains fileKey returned from S3 upload
+      const fileKey = uploadResult.fileKey;
+
+      // Step 2: Call Pinecone API to process the file using the fileKey
+      const pineconeResponse = await fetch("/api/upload-pinecone", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fileKey }), // Pass the fileKey from S3 to the Pinecone API
+      });
+
+      if (!pineconeResponse.ok) {
+        throw new Error("Pinecone processing failed");
+      }
+
+      const pineconeResult = await pineconeResponse.json();
+      console.log("Pinecone response:", pineconeResult);
+
+      // Resetting states after successful upload and processing
       setIsUploading(false);
       setIsModalVisible(false);
       setSelectedFile(null);
       if (props.handleAction) {
-        props.handleAction(result.fileKey, result.fileKey);
+        console.log(fileKey);
+        props.handleAction("", fileKey);
       }
     } catch (error) {
-      console.error("Error uploading file:", error);
+      console.error("Error during upload or Pinecone processing:", error);
+      setIsUploading(false); // Stop loading state even if there's an error
     }
   };
 

@@ -70,6 +70,7 @@ const DeleteButton = ({ fileKey, upSubmission }) => {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
             className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative"
+            style={{ minWidth: "450px" }}
           >
             {/* Close Button */}
 

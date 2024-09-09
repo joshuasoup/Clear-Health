@@ -11,11 +11,12 @@ const s3Client = new S3Client({
 });
 
 export default async function handler(req, res) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method Not Allowed" });
   }
 
   const { key } = req.query;
+  console.log(key);
 
   const command = new GetObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET_NAME,
@@ -23,7 +24,9 @@ export default async function handler(req, res) {
   });
 
   try {
-    const presignedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    const presignedUrl = await getSignedUrl(s3Client, command, {
+      expiresIn: 3600,
+    });
     res.status(200).json({ presignedUrl });
   } catch (error) {
     console.error("Error generating pre-signed URL:", error);
