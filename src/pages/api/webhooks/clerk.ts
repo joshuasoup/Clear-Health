@@ -3,6 +3,15 @@ import { WebhookEvent } from '@clerk/nextjs/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { buffer } from 'micro';
 import clientPromise from '../../../lib/mongo/db';
+import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+
+const s3Client = new S3Client({
+  region: process.env.AWS_S3_REGION || '',
+  credentials: {
+    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY || '',
+  },
+});
 
 export const config = {
   api: {
@@ -54,15 +63,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Handle the event after successful verification
   const { id } = evt.data;
   const eventType = evt.type;
+  const clerkId = evt.data.id;
+
+  // Connect to MongoDB
+  const client = await clientPromise;
+  const database = client.db('userdata');
+  const usersCollection = database.collection('Users');
 
   if (eventType === 'user.created') {
     try {
-      console.log('User Created - Clerk ID:', evt.data.id);
-
-      // Connect to MongoDB
-      const client = await clientPromise;
-      const database = client.db('userdata');
-      const usersCollection = database.collection('Users');
+      console.log('User Created - Clerk ID:', clerkId);
 
       // Insert the new user into the MongoDB collection
       await usersCollection.insertOne({
@@ -72,14 +82,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         subscriptionStatus: false // Initialize subscription status
       });
       
-      console.log('User inserted into MongoDB:', evt.data.id);
+      console.log('User inserted into MongoDB:', clerkId);
 
     } catch (error) {
       console.error('Error inserting user into MongoDB:', error);
       return res.status(500).json({ error: 'Error saving user data' });
     }
-  }
+  } else if (eventType === 'user.deleted') {
 
+      // Fetch the user’s files from MongoDB
+      const user = await usersCollection.findOne({ clerkId });
+      if (!user || !user.pdfs || user.pdfs.length === 0) {
+        console.log('No files found for the user');
+      } else {
+        // Loop through each file key and delete the file from S3
+        for (const file of user.pdfs) {
+          const deleteParams = {
+            Bucket: process.env.AWS_S3_BUCKET_NAME,
+            Key: file.key, // File key in S3
+          };
+          await s3Client.send(new DeleteObjectCommand(deleteParams));
+          console.log(`Deleted file from S3: ${file.key}`);
+        }
+
+        // Delete the user from MongoDB
+        const deleteResult = await usersCollection.deleteOne({ clerkId });
+
+        if (deleteResult.deletedCount === 1) {
+          console.log('User and files deleted from MongoDB:', clerkId);
+        } else {
+          console.error('User not found or already deleted from MongoDB:', clerkId);
+        }
+      }
+    }
   // Return success response
   return res.status(200).json({ response: 'Success' });
 }

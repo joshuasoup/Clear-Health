@@ -149,11 +149,11 @@ export default function Viewer() {
         return response.json();
       })
       .then((data) => {
-        setSelectedTitle(name);
-        console.log(data.presignedUrl);
         setSelectedPdfUrl(data.presignedUrl);
         toggleActive(key);
         setCurrentFileKey(key);
+        console.log(name);
+        setSelectedTitle(name);
       })
 
       .catch((error) => {

@@ -9,12 +9,10 @@ const DeleteButton = ({ fileKey, upSubmission }) => {
 
   const handleOpenModal = () => {
     setModalVisible(!isModalVisible);
-    console.log("open");
   };
 
   const handleCloseModal = () => {
     setModalVisible(false);
-    console.log("here");
   };
 
   const deleteFile = async (key) => {
@@ -37,7 +35,6 @@ const DeleteButton = ({ fileKey, upSubmission }) => {
 
       const data = await response.json();
       console.log("Success:", data);
-      alert("File deleted successfully!");
       upSubmission();
     } catch (error) {
       console.error("Error:", error);

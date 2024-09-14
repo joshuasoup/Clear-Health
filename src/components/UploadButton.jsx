@@ -53,15 +53,13 @@ const UploadButton = (props) => {
       }
 
       const pineconeResult = await pineconeResponse.json();
-      console.log("Pinecone response:", pineconeResult);
 
       // Resetting states after successful upload and processing
       setIsUploading(false);
       setIsModalVisible(false);
       setSelectedFile(null);
       if (props.handleAction) {
-        console.log(fileKey);
-        props.handleAction("", fileKey);
+        props.handleAction(fileKey, fileKey);
       }
     } catch (error) {
       console.error("Error during upload or Pinecone processing:", error);
