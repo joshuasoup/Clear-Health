@@ -10,6 +10,7 @@ import logo from "../assets/clearhealthlogo.png";
 export default function ChatComponent({ callhandleClick, fileKey }) {
   const { messages, input, handleInputChange, handleSubmit, setMessages } =
     useChat({
+      api: "/api/chat",
       body: {
         fileKey,
       },
@@ -33,8 +34,6 @@ export default function ChatComponent({ callhandleClick, fileKey }) {
       setTimeout(() => {
         chatContainerRef.current.scrollTop =
           chatContainerRef.current.scrollHeight;
-        console.log("Scroll height:", chatContainerRef.current.scrollHeight);
-        console.log("Scroll top:", chatContainerRef.current.scrollTop);
       }, 90);
     }
   };
@@ -60,15 +59,25 @@ export default function ChatComponent({ callhandleClick, fileKey }) {
 
   return (
     <div className="flex flex-col py-0 stretch h-full w-full justify-between border bg-menu px-4">
-      <button
-        onClick={callhandleClick}
-        className="toggle-button hover:bg-gray-300 rounded-md mt-4 mb-2 w-full flex-row flex"
-      >
-        <Image src={RightArrow} alt="Next" width={30} height={30} />
-      </button>
-      <button onClick={refreshChat}>
-        <Image src={RefreshLogo} width={30} height={30} />
-      </button>
+      <div className="flex flex-row justify-between">
+        <button
+          onClick={callhandleClick}
+          className="toggle-button hover:bg-gray-200 rounded-md mt-4 mb-2 transform transition-transform duration-300 hover:scale-110"
+        >
+          <Image src={RightArrow} alt="Next" width={35} height={35} />
+        </button>
+        <button
+          onClick={refreshChat}
+          className="transform transition-transform duration-300 hover:scale-110 toggle-button"
+        >
+          <Image
+            src={RefreshLogo}
+            width={35}
+            height={35}
+            className="mt-4 mb-2 rounded-md hover:bg-gray-200"
+          />
+        </button>
+      </div>
 
       {/* Add ref to the chat container */}
       <div

@@ -18,6 +18,7 @@ import DeleteButton from "../../components/DeleteButton";
 import TokenProgressBar from "../../components/TokenProgressBar";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { UserProfile } from "@clerk/nextjs";
 
 const PDFLoader = dynamic(() => import("../../components/PDFLoader"), {
   ssr: false,
@@ -61,10 +62,15 @@ export default function Viewer() {
   const [isSubscribed, setIsSubscribed] = useState(false); //remove later temporary
   const { user } = useUser();
   const router = useRouter();
+  const [showUserProfile, setShowUserProfile] = useState(false);
   if (!user) {
     console.log("no user");
     router.push("/");
   }
+
+  const toggleUserProfile = () => {
+    setShowUserProfile((prev) => !prev);
+  };
 
   const startRenaming = (key, currentName) => {
     setRenamingKey(key);
@@ -212,6 +218,33 @@ export default function Viewer() {
 
   return (
     <div className="flex flex-col h-screen">
+      {showUserProfile && (
+        <div>
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"
+            initial={{ opacity: 0 }} // Start with 0 opacity
+            animate={{ opacity: 1 }} // Animate to full opacity
+            exit={{ opacity: 0 }} // Animate to 0 opacity when closing
+            onClick={toggleUserProfile} // Close when clicking on the background
+          />
+          <motion.div
+            className="fixed inset-0 flex items-center justify-center z-50"
+            initial={{ scale: 0.5, opacity: 0 }} // Start small and transparent
+            animate={{ scale: 1, opacity: 1 }} // Animate to full size and opacity
+            exit={{ scale: 0.5, opacity: 0 }} // Shrink when closing
+            transition={{ duration: 0.3, ease: "easeInOut" }} // Control timing
+          >
+            {/* Your UserProfile component or other content here */}
+            <UserProfile routing="hash" />
+          </motion.div>
+          <button
+            className="absolute top-4 right-6 text-white font-semibold text-3xl hover:text-slate-300 z-50"
+            onClick={toggleUserProfile}
+          >
+            &times;
+          </button>
+        </div>
+      )}
       {/* Content Area */}
       <div
         className={`flex ${isOpen ? "overflow-hidden" : ""} overflow-hidden`}
@@ -336,7 +369,7 @@ export default function Viewer() {
                 <div></div>
               </div>
               <hr className="m-3" />
-              <UserMenu />
+              <UserMenu onProfileClick={toggleUserProfile} />
               {!isSubscribed && (
                 <button
                   className="special-button mt-2"
