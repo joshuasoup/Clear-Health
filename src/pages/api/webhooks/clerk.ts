@@ -84,22 +84,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (eventType === 'user.deleted') {
 
       // Fetch the user’s files from MongoDB
-      const user = await usersCollection.findOne({ clerkId });
-      if (!user || !user.pdfs || user.pdfs.length === 0) {
-        console.log('No files found for the user');
+      const user = await usersCollection.findOne({ clerkUserId: clerkId });
+      console.log(user)
+      if (!user) {
+        console.log('No user found');
       } else {
         // Loop through each file key and delete the file from S3
-        for (const file of user.pdfs) {
-          const deleteParams = {
-            Bucket: process.env.AWS_S3_BUCKET_NAME,
-            Key: file.key, // File key in S3
-          };
-          await s3Client.send(new DeleteObjectCommand(deleteParams));
-          console.log(`Deleted file from S3: ${file.key}`);
+        if( user.pdfs ) {
+          for (const file of user.pdfs) {
+            const deleteParams = {
+              Bucket: process.env.AWS_S3_BUCKET_NAME,
+              Key: file.key, // File key in S3
+            };
+            await s3Client.send(new DeleteObjectCommand(deleteParams));
+            console.log(`Deleted file from S3: ${file.key}`);
+          }
         }
-
+        
         // Delete the user from MongoDB
-        const deleteResult = await usersCollection.deleteOne({ clerkId });
+        const deleteResult = await usersCollection.deleteOne({ clerkUserId: clerkId });
 
         if (deleteResult.deletedCount === 1) {
           console.log('User and files deleted from MongoDB:', clerkId);
