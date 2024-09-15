@@ -3,15 +3,8 @@ import { WebhookEvent } from '@clerk/nextjs/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { buffer } from 'micro';
 import clientPromise from '../../../lib/mongo/db';
-import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
-
-const s3Client = new S3Client({
-  region: process.env.AWS_S3_REGION || '',
-  credentials: {
-    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID || '',
-    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY || '',
-  },
-});
+import s3Client from '../../../lib/aws/db'
+import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 export const config = {
   api: {

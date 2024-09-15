@@ -1,17 +1,9 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import s3Client from "../../lib/aws/db";
 import { getAuth } from "@clerk/nextjs/server";
 import { IncomingForm } from "formidable";
 import clientPromise from "../../lib/mongo/db";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
-
-// Initialize the S3 client with AWS SDK v3
-const s3Client = new S3Client({
-  region: process.env.AWS_S3_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-  },
-});
 
 export const config = {
   api: {

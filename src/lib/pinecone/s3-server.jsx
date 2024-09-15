@@ -1,13 +1,5 @@
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-
-// AWS S3 setup
-const s3Client = new S3Client({
-  region: process.env.AWS_S3_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-  },
-});
+import s3Client from "../aws/db";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 
 // Function to download PDF from S3
 export const downloadFromS3 = async (fileKey) => {

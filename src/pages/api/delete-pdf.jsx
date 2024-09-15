@@ -1,15 +1,9 @@
-import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import s3Client from "../../lib/aws/db";
 import clientPromise from "../../lib/mongo/db";
 import { getAuth } from "@clerk/nextjs/server";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 // Initialize the S3 client
-const s3Client = new S3Client({
-  region: process.env.AWS_S3_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-  },
-});
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
