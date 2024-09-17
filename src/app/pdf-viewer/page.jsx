@@ -193,6 +193,7 @@ export default function Viewer() {
   useEffect(() => {
     async function fetchPDFs() {
       try {
+        setSelectedTitle("Loading...");
         const response = await fetch("/api/get-pdf");
         if (!response.ok) throw new Error("Network response was not ok.");
         const data = await response.json();

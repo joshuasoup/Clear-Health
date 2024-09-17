@@ -34,6 +34,7 @@ const UploadButton = (props) => {
 
       if (!uploadResponse.ok) {
         throw new Error("S3 Upload failed");
+      } else if (uploadResponse.status === 403) {
       }
 
       const uploadResult = await uploadResponse.json(); // Contains fileKey returned from S3 upload

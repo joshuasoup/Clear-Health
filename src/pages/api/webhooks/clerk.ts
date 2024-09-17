@@ -57,6 +57,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { id } = evt.data;
   const eventType = evt.type;
   const clerkId = evt.data.id;
+  
 
   // Connect to MongoDB
   const client = await clientPromise;
@@ -65,6 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (eventType === 'user.created') {
     try {
+      const email = evt.data.email_addresses[0].email_address;
       console.log('User Created - Clerk ID:', clerkId);
 
       // Insert the new user into the MongoDB collection
@@ -72,7 +74,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         clerkUserId: evt.data.id, // Add Clerk user ID
         pdfs: [],                 // Initialize with an empty PDF array
         tokensUsed: 0,            // Initialize tokens used
-        subscriptionStatus: false // Initialize subscription status
+        subscriptionStatus: false, // Initialize subscription status
+        email: email
       });
       
       console.log('User inserted into MongoDB:', clerkId);

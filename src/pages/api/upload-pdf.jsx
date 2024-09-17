@@ -32,9 +32,23 @@ async function uploadFileToS3(file) {
 
 export default async function handler(req, res) {
   const { userId } = getAuth(req);
+  const client = await clientPromise;
+  const database = client.db("userdata");
+  const usersCollection = database.collection("Users");
+
+  const user = await usersCollection.findOne({ clerkUserId: userId });
+  const subscriptionStatus = user.subscriptionStatus;
+  const pdfCount = user.pdfs ? user.pdfs.length : 0;
+
+  if (subscriptionStatus === false && pdfCount >= 2) {
+    return res
+      .status(403)
+      .json({ error: "Upload limit reached or inactive subscription" });
+  }
 
   const form = new IncomingForm({ keepExtensions: true });
-
+  console.log(pdfCount);
+  console.log(subscriptionStatus);
   const parseForm = () =>
     new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
@@ -59,9 +73,6 @@ export default async function handler(req, res) {
     };
 
     // Step 2: Update MongoDB with the metadata including the S3 key
-    const client = await clientPromise;
-    const database = client.db("userdata");
-    const usersCollection = database.collection("Users");
 
     await usersCollection.updateOne(
       { clerkUserId: userId },
