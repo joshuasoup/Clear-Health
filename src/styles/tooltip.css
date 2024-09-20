@@ -1,17 +1,19 @@
 .styled-button {
     background-color: #ffffff;
     /* Green background, adjust the hex value to match the screenshot */
-    color: red;
+    color: #ff0004;
     /* White text */
     border: none;
     /* No border for a flat design */
     border-radius: 4px;
     /* Slightly rounded corners, adjust as needed */
     padding: 4px 16px;
+    padding-left: 10px;
     font-size: 13px;
     cursor: pointer;
     outline: none;
     transition: background-color 0.3s;
+    font-weight: 600;
 }
 
 .styled-button:hover {

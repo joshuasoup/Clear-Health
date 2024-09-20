@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import "../styles/globals.css";
 import "../styles/viewer.css";
 import Image from "next/image";
-import plus from "../assets/plus.png";
-import pdfIcon from "../assets/pdf-icon.png"; // Add a PDF icon image in your assets
+import plus from "../assets/images/plus.png";
+import pdfIcon from "../assets/images/pdf-icon.png"; // Add a PDF icon image in your assets
 
 const UploadButton = (props) => {
   const [selectedFile, setSelectedFile] = useState(null);

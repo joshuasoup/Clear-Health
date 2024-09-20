@@ -5,6 +5,9 @@ import DOMPurify from "dompurify";
 import parse from "html-react-parser";
 import { useToken } from "../contexts/TokenContext";
 import { motion } from "framer-motion";
+import glass from "../assets/images/magnifyingglass.png";
+import bulb from "../assets/images/secondbulb.png";
+import Image from "next/image";
 
 const ToolTip = forwardRef(({ tooltipText }, ref) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -82,7 +85,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
   }, [isVisible]);
 
   const handleDefineClick = async () => {
-    setContentMode("text"); // Change mode to just text on clicking Define
+    setContentMode("text");
     const selection = window.getSelection();
     const selectedWord = selection.toString().trim();
     setDefinitions([]); // Clear previous definitions
@@ -95,34 +98,56 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
 
       // Set the tooltip position to be right under the selected text
       setPosition({
-        top: rect.bottom + window.scrollY - container.top + 5, // Add a small space below the selection
+        top: rect.bottom + window.scrollY - container.top + 5,
         left: rect.left - container.left + window.scrollX,
       });
 
-      // Fetch the definition of the selected word
-      const response = await fetch(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${selectedWord}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        const definitionsData =
-          data[0]?.meanings.map((meaning, index) => ({
-            partOfSpeech: meaning.partOfSpeech,
-            definitions: meaning.definitions.slice(0, 4).map((def, idx) => ({
-              definition: def.definition,
+      try {
+        const response = await fetch(
+          `https://www.dictionaryapi.com/api/v3/references/medical/json/${selectedWord}?key=2e02ed01-752b-4f99-8c80-256bb69ea462`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          if (data.length > 0 && typeof data[0] === "object") {
+            const definitionsData = data[0].shortdef.map((def, idx) => ({
+              definition: def,
               index: idx + 1,
-            })),
-          })) || [];
-        setDefinitions(definitionsData);
-        setSource("Wiktionary");
-      } else {
+            }));
+            setDefinitions([
+              { partOfSpeech: data[0].fl, definitions: definitionsData },
+            ]);
+            setSource("Merriam-Webster Medical Dictionary");
+          } else {
+            setDefinitions([
+              {
+                partOfSpeech: "",
+                definitions: [{ definition: "No definition found.", index: 1 }],
+              },
+            ]);
+            setSource("Merriam-Webster Medical");
+          }
+        } else {
+          setDefinitions([
+            {
+              partOfSpeech: "",
+              definitions: [
+                { definition: "Error fetching definition.", index: 1 },
+              ],
+            },
+          ]);
+          setSource("Merriam-Webster Medical");
+        }
+      } catch (error) {
+        console.error("Error fetching definition:", error);
         setDefinitions([
           {
             partOfSpeech: "",
-            definitions: [{ definition: "No definition found.", index: 1 }],
+            definitions: [
+              { definition: "Error fetching definition.", index: 1 },
+            ],
           },
         ]);
-        setSource("Wiktionary");
+        setSource("Merriam-Webster Medical");
       }
     }
   };
@@ -265,22 +290,36 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
             }}
           >
             <button
-              className="styled-button mr-1 font-inter"
+              className="styled-button mr-1 font-inter flex flex-row"
               onClick={handleDefineClick}
             >
+              <Image
+                src={glass}
+                alt="Magnifying Glass"
+                width={18}
+                height={18}
+                style={{ marginRight: "6px" }}
+              />
               Define
             </button>
             <div
               style={{
                 height: "20px",
-                width: "1px",
+                width: "2px",
                 backgroundColor: "rgba(0, 0, 0, 0.1)",
               }}
             ></div>
             <button
-              className="styled-button ml-1 font-inter"
+              className="styled-button ml-1 font-inter flex flex-row"
               onClick={handleExplainSubmit}
             >
+              <Image
+                src={bulb}
+                alt="Light Bulb"
+                width={18}
+                height={18}
+                style={{ marginRight: "6px" }}
+              />
               Explain
             </button>
           </div>

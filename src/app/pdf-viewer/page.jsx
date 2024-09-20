@@ -7,18 +7,19 @@ import "../../styles/viewer.css";
 import UserMenu from "../../components/UserMenu";
 import Link from "next/link";
 import Image from "next/image";
-import medicalLogo from "../../assets/clearhealthlogo.png";
+import medicalLogo from "../../assets/images/clearhealthlogo.png";
 import PricingCatalog from "../../components/PricingCatalog";
 import { motion } from "framer-motion";
-import sidebar from "../../assets/1.png";
+import sidebar from "../../assets/images/1.png";
 import ChatComponent from "../../components/ChatComponent";
-import garbagecan from "../../assets/garbagecan.png";
-import pencil from "../../assets/pencil.png";
+import pencil from "../../assets/images/pencil.png";
 import DeleteButton from "../../components/DeleteButton";
 import TokenProgressBar from "../../components/TokenProgressBar";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { UserProfile } from "@clerk/nextjs";
+import message from "../../assets/images/chatsymbol.png";
 
 const PDFLoader = dynamic(() => import("../../components/PDFLoader"), {
   ssr: false,
@@ -63,9 +64,30 @@ export default function Viewer() {
   const { user } = useUser();
   const router = useRouter();
   const [showUserProfile, setShowUserProfile] = useState(false);
+
+  useEffect(() => {
+    if (!showComponent) {
+      setUserWidth(null); // Resets the user-set width when the component is not shown
+    }
+  }, [showComponent]);
+
+  useEffect(() => {
+    async function fetchPDFs() {
+      try {
+        setSelectedTitle("Loading...");
+        const response = await fetch("/api/get-pdf");
+        if (!response.ok) throw new Error("Network response was not ok.");
+        const data = await response.json();
+        setPDFs(data.userCollection);
+      } catch (error) {
+        setError(error.message);
+      }
+    }
+    fetchPDFs();
+  }, [submissionCount]);
+
   if (!user) {
-    console.log("no user");
-    router.push("/");
+    return <LoadingSpinner />;
   }
 
   const toggleUserProfile = () => {
@@ -183,27 +205,6 @@ export default function Viewer() {
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
-
-  useEffect(() => {
-    if (!showComponent) {
-      setUserWidth(null); // Resets the user-set width when the component is not shown
-    }
-  }, [showComponent]);
-
-  useEffect(() => {
-    async function fetchPDFs() {
-      try {
-        setSelectedTitle("Loading...");
-        const response = await fetch("/api/get-pdf");
-        if (!response.ok) throw new Error("Network response was not ok.");
-        const data = await response.json();
-        setPDFs(data.userCollection);
-      } catch (error) {
-        setError(error.message);
-      }
-    }
-    fetchPDFs();
-  }, [submissionCount]);
 
   const toggleActive = (key) => {
     if (activeItemKey === key) {
@@ -407,6 +408,12 @@ export default function Viewer() {
               </button> */}
               {modalOpen && (
                 <div className="modal-background ">
+                  <button
+                    className="absolute top-4 right-6 text-white font-semibold text-3xl hover:text-slate-300"
+                    onClick={handleCloseModal}
+                  >
+                    &times;
+                  </button>
                   <motion.div
                     initial={{ y: 100, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -414,12 +421,15 @@ export default function Viewer() {
                     className="modal-content w-200"
                   >
                     <PricingCatalog />
-                    <button onClick={handleCloseModal}>Close</button>
                   </motion.div>
                 </div>
               )}
               {!showComponent && (
-                <button className="button mr-0" onClick={openChat}>
+                <button
+                  className="button text-gray-500 mr-0 font-semibold flex flex-row items-center"
+                  onClick={openChat}
+                >
+                  <Image src={message} width={18} className="mr-2" />
                   Chat
                 </button>
               )}

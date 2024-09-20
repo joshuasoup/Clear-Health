@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import medicalLogo from "../assets/clearhealthlogo.png";
+import medicalLogo from "../assets/images/clearhealthlogo.png";
 import { useUser } from "@clerk/clerk-react";
 
 const Navbar = () => {
