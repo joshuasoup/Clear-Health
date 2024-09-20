@@ -3,10 +3,10 @@ import "../styles/globals.css";
 
 const Footer = () => {
   return (
-    <footer className="bg-white text-white pt-10 pb-8 min-h-44 px-20  bottom-0">
+    <footer className="bg-white text-white pt-10 pb-8 min-h-44 px-20">
       <div className="container mx-auto h-full relative">
         {/* Top section with links and social icons */}
-        <div className="flex flex-wrap justify-between items-center">
+        <div className="flex flex-wrap justify-between items-center mb-6">
           {/* Quick Links */}
           <div className="flex space-x-6">
             <a
@@ -44,7 +44,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom section with copyright */}
-        <div className="border-t border-gray-300 pt-6 text-right  w-full absolute bottom-0">
+        <div className="border-t border-gray-300 pt-6 text-right w-full">
           <p className="text-footer footText">
             &copy; {new Date().getFullYear()} Clear Health. All rights reserved.
           </p>

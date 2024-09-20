@@ -42,9 +42,11 @@ module.exports = {
         115: '115px',
         catalog: '380px',
         menu: "240px",
+        page: "1500px"
       },
       height: {
         catalog: '560px',
+        hero: '600px',
       },
       backgroundImage: {
         'fade-left': 'linear-gradient(to right, rgba(255, 255, 255, 0), rgba(250, 250, 252, 0.5))', 
@@ -55,14 +57,19 @@ module.exports = {
       minHeight: {
         'pdf': '80%',
         'pdfbar': '63px',
+        'hero': '600px',
         
       },
       minWidth: {
         'menu': '240px',
+        'hero' : '600px',
       },
       maxHeight: {
         'menu': '200px',
         'pdfbar': '64px',
+      },
+      maxWidth: {
+        'page': '1500px',
       },
       flex: {
         7: '7 1 0%', // flex-grow: 7; flex-shrink: 1; flex-basis: 0%;

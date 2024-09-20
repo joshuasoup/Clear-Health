@@ -88,7 +88,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Fetch the user’s files from MongoDB
       const user = await usersCollection.findOne({ clerkUserId: clerkId });
-      console.log(user)
       if (!user) {
         console.log('No user found');
       } else {

@@ -5,6 +5,7 @@ import "../styles/globals.css";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
+import Footer from "../components/Footer";
 
 const Home = () => {
   const { user } = useUser();
@@ -17,35 +18,152 @@ const Home = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ ease: "easeOut", duration: 0.5 }}
       >
-        <section className="w-full flex-center flex-col">
-          <h1
-            className="font-inter text-6xl pt-20 font-semibold py-10 tracking-tighter max-w-4xl text-center mx-auto px-8"
-            style={{ lineHeight: "1.2" }}
-          >
-            Learn to read medical reports on your own
-          </h1>
-          <p className="max-w-lg text-center mx-auto leading-7 font-inter text-neutral-500 text-lg">
-            ClearHealth's AI-powered assistant will allow you to take control of
-            your health and help you fully understand your medical condition
-          </p>
-          <div className="py-10">
-            <Link
-              href={user ? "/pdf-viewer" : "/sign-in"}
-              className="special-button"
-              style={{
-                fontWeight: "400",
-                fontSize: "19px",
-                paddingLeft: "30px",
-                paddingRight: "30px",
-                paddingTop: "15px",
-                paddingBottom: "15px",
-              }}
+        <section className="w-full h-hero flex-center flex-col items-center flex align-middle">
+          <div className="max-w-page">
+            <h1
+              className="font-inter text-6xl pt-20 font-semibold py-10 tracking-tighter max-w-4xl text-center mx-auto px-8"
+              style={{ lineHeight: "1.2" }}
             >
-              Get Started Now
-            </Link>
+              Learn to read medical reports on your own
+            </h1>
+            <p className="max-w-lg text-center mx-auto leading-7 font-inter text-neutral-500 text-lg">
+              ClearHealth's AI-powered assistant will allow you to take control
+              of your health and help you fully understand your medical
+              condition
+            </p>
+            <div className="py-10">
+              <Link
+                href={user ? "/pdf-viewer" : "/sign-in"}
+                className="special-button"
+                style={{
+                  fontWeight: "400",
+                  fontSize: "19px",
+                  paddingLeft: "30px",
+                  paddingRight: "30px",
+                  paddingTop: "15px",
+                  paddingBottom: "15px",
+                }}
+              >
+                Get Started Now
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Dynamic Tooltips for Quick Definitions Section */}
+        <section className="w-full flex flex-row justify-center items-center py-16 bg-gray-100 min-h-hero px-20">
+          {/* Video on the left */}
+          <div className="max-w-page flex flex-col lg:flex-row justify-center lg:justify-between items-center lg:items-stretch lg:space-x-8">
+            {/* Video Section */}
+            <div className="w-full lg:w-1/2 px-8 flex justify-center items-center">
+              <video
+                src="/assets/toolTipVideo.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                disablePictureInPicture
+                preload="auto"
+                style={{
+                  cursor: "auto",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "12px",
+                  display: "block",
+                  objectFit: "cover",
+                  backgroundColor: "rgba(0, 0, 0, 0)",
+                  objectPosition: "50% 50%",
+                }}
+                className="shadow-2xl"
+              >
+                <track
+                  src="/assets/captions.vtt"
+                  kind="subtitles"
+                  srcLang="en"
+                  label="English"
+                />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
+            {/* Text Section */}
+            <div className="w-full lg:w-1/2 text-center lg:text-left px-8 flex flex-col justify-center">
+              <h2 className="text-3xl font-semibold mb-4">
+                Dynamic Tooltips for Quick Definitions
+              </h2>
+              <p className="text-lg text-neutral-500">
+                Hover over <span className="font-bold">complex</span> terms to
+                reveal clear, concise definitions. Make sense of medical
+                language in real-time, whether you're a{" "}
+                <span className="font-bold">doctor</span>,{" "}
+                <span className="font-bold">patient</span>, or{" "}
+                <span className="font-bold">researcher</span>.
+              </p>
+              {/* Example Tooltip */}
+              <p className="mt-6">
+                Here's an example of a term with a tooltip:{" "}
+                <span className="relative group cursor-pointer text-blue-500">
+                  Hemoglobin
+                  <span className="absolute left-0 w-48 p-2 mt-2 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                    A protein in red blood cells that carries oxygen throughout
+                    the body.
+                  </span>
+                </span>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* AI-Powered Medical Insights Section */}
+        <section className="w-full flex flex-row justify-center items-center py-16 min-h-hero px-20">
+          {/* Insights text on the left */}
+          <div className="max-w-page flex flex-col lg:flex-row justify-center lg:justify-between items-center lg:items-stretch lg:space-x-8">
+            <div className="w-full lg:w-1/2 text-center lg:text-left px-8 flex flex-col justify-center">
+              <h2 className="text-3xl font-semibold mb-4">
+                AI-Powered Medical Insights
+              </h2>
+              <p className="text-lg text-neutral-500">
+                Harness the power of AI to break down medical jargon into
+                simple, actionable insights. Easily interpret diagnoses,
+                symptoms, and treatments without needing a medical degree.
+              </p>
+            </div>
+
+            {/* Placeholder for Image or additional media */}
+            <div className="w-full lg:w-1/2 px-8">
+              <video
+                src="/assets/explainToolTipVideo.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                disablePictureInPicture
+                preload="auto"
+                style={{
+                  cursor: "auto",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "12px",
+                  display: "block",
+                  objectFit: "cover",
+                  backgroundColor: "rgba(0, 0, 0, 0)",
+                  objectPosition: "50% 50%",
+                }}
+                className="shadow-2xl"
+              >
+                <track
+                  src="/assets/captions.vtt"
+                  kind="subtitles"
+                  srcLang="en"
+                  label="English"
+                />
+                Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
         </section>
       </motion.div>
+      <Footer />
     </div>
   );
 };
