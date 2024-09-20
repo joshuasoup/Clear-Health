@@ -37,6 +37,7 @@ export default async function handler(req, res) {
   const usersCollection = database.collection("Users");
 
   const user = await usersCollection.findOne({ clerkUserId: userId });
+  console.log(user);
   const subscriptionStatus = user.subscriptionStatus;
   const pdfCount = user.pdfs ? user.pdfs.length : 0;
 
