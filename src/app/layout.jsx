@@ -2,6 +2,8 @@ import "../styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { TokenProvider } from "../contexts/TokenContext";
 import { neobrutalism } from "@clerk/themes";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
   title: "ClearHealth",
