@@ -35,7 +35,7 @@ body {
 }
 
 ::selection {
-  background: #a2a2a246 !important;
+  background: #ffafaf46 !important;
 }
 
 .react-pdf__Page__textContent {

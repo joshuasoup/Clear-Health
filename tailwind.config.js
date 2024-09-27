@@ -70,6 +70,7 @@ module.exports = {
       },
       maxWidth: {
         'page': '1500px',
+        'about': '1248px',
       },
       flex: {
         7: '7 1 0%', // flex-grow: 7; flex-shrink: 1; flex-basis: 0%;

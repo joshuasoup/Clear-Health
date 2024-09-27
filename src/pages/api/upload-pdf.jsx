@@ -41,7 +41,7 @@ export default async function handler(req, res) {
   const subscriptionStatus = user.subscriptionStatus;
   const pdfCount = user.pdfs ? user.pdfs.length : 0;
 
-  if (subscriptionStatus === false && pdfCount >= 2) {
+  if (subscriptionStatus === false && pdfCount >= 5) {
     return res
       .status(403)
       .json({ error: "Upload limit reached or inactive subscription" });

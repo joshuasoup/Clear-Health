@@ -135,7 +135,7 @@ const Home = () => {
             </div>
 
             {/* Text Section */}
-            <div className="w-full lg:w-1/3 text-center lg:text-left px-8 flex flex-col justify-center">
+            <div className="w-full lg:w-1/3 text-center mt-8 lg:text-left px-8 flex flex-col justify-center">
               <h2 className="text-3xl font-semibold mb-4">
                 Dynamic Tooltips for Quick Definitions
               </h2>
@@ -171,7 +171,7 @@ const Home = () => {
         >
           {/* Insights text on the left */}
           <div className="max-w-page flex flex-col lg:flex-row justify-center lg:justify-between items-center lg:items-stretch lg:space-x-8">
-            <div className="w-full lg:w-1/3 text-center lg:text-left px-8 flex flex-col justify-center">
+            <div className="w-full lg:w-1/3 text-center mb-8 lg:text-left px-8 flex flex-col justify-center">
               <h2 className="text-3xl font-semibold mb-4">
                 AI-Powered Medical Insights
               </h2>
@@ -258,7 +258,7 @@ const Home = () => {
             </div>
 
             {/* Text Section */}
-            <div className="w-full lg:w-1/3 text-center lg:text-left px-8 flex flex-col justify-center">
+            <div className="w-full lg:w-1/3 text-center mt-8 lg:text-left px-8 flex flex-col justify-center">
               <h2 className="text-3xl font-semibold mb-4">
                 Chatbot with PDF Knowledge
               </h2>

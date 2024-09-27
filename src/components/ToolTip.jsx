@@ -98,26 +98,61 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
 
       // Set the tooltip position to be right under the selected text
       setPosition({
-        top: rect.bottom + window.scrollY - container.top + 5,
+        top: rect.bottom + window.scrollY - container.top + 5, // Add a small space below the selection
         left: rect.left - container.left + window.scrollX,
       });
 
       try {
-        const response = await fetch(
+        // First, try fetching from Wiktionary
+        const wiktionaryResponse = await fetch(
+          `https://api.dictionaryapi.dev/api/v2/entries/en/${selectedWord}`
+        );
+
+        if (wiktionaryResponse.ok) {
+          const wiktionaryData = await wiktionaryResponse.json();
+          const definitionsData =
+            wiktionaryData[0]?.meanings.map((meaning) => ({
+              partOfSpeech: meaning.partOfSpeech,
+              definitions: meaning.definitions.slice(0, 4).map((def, idx) => ({
+                definition: def.definition,
+                index: idx + 1,
+              })),
+            })) || [];
+
+          // If Wiktionary has definitions, set them and stop further execution
+          if (definitionsData.length > 0) {
+            setDefinitions(definitionsData);
+            setSource("Wiktionary");
+            return; // Stop here if Wiktionary returns valid definitions
+          }
+        }
+
+        // If Wiktionary does not return valid data, try Merriam-Webster Medical API
+        const merriamWebsterResponse = await fetch(
           `https://www.dictionaryapi.com/api/v3/references/medical/json/${selectedWord}?key=2e02ed01-752b-4f99-8c80-256bb69ea462`
         );
-        if (response.ok) {
-          const data = await response.json();
-          if (data.length > 0 && typeof data[0] === "object") {
-            const definitionsData = data[0].shortdef.map((def, idx) => ({
-              definition: def,
-              index: idx + 1,
-            }));
+
+        if (merriamWebsterResponse.ok) {
+          const merriamWebsterData = await merriamWebsterResponse.json();
+          if (
+            merriamWebsterData.length > 0 &&
+            typeof merriamWebsterData[0] === "object"
+          ) {
+            const definitionsData = merriamWebsterData[0].shortdef.map(
+              (def, idx) => ({
+                definition: def,
+                index: idx + 1,
+              })
+            );
             setDefinitions([
-              { partOfSpeech: data[0].fl, definitions: definitionsData },
+              {
+                partOfSpeech: merriamWebsterData[0].fl,
+                definitions: definitionsData,
+              },
             ]);
             setSource("Merriam-Webster Medical Dictionary");
           } else {
+            // Handle case where no definition is found in Merriam-Webster
             setDefinitions([
               {
                 partOfSpeech: "",
@@ -127,6 +162,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
             setSource("Merriam-Webster Medical");
           }
         } else {
+          // Handle error in Merriam-Webster API call
           setDefinitions([
             {
               partOfSpeech: "",

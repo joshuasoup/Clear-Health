@@ -4,7 +4,7 @@ import "../styles/globals.css";
 const Footer = () => {
   return (
     <footer className="bg-white text-white pt-10 pb-8 min-h-44 px-20">
-      <div className="container mx-auto h-full relative">
+      <div className="container mx-auto h-full relative max-w-about">
         {/* Top section with links and social icons */}
         <div className="flex flex-wrap justify-between items-center mb-6">
           {/* Quick Links */}
