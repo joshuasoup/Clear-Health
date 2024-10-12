@@ -3,9 +3,11 @@ import Image from "next/image";
 import garbagecan from "../assets/images/garbagecan.png";
 import warningIcon from "../assets/images/warning.png";
 import { motion } from "framer-motion";
+import LoadingSpinner from "./LoadingSpinner";
 
 const DeleteButton = ({ fileKey, upSubmission }) => {
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false); // New state for deletion process
 
   const handleOpenModal = () => {
     setModalVisible(!isModalVisible);
@@ -16,6 +18,7 @@ const DeleteButton = ({ fileKey, upSubmission }) => {
   };
 
   const deleteFile = async (key) => {
+    setIsDeleting(true); // Set deleting state to true
     const url = "/api/delete-pdf";
     const body = JSON.stringify({ key });
 
@@ -35,11 +38,12 @@ const DeleteButton = ({ fileKey, upSubmission }) => {
 
       const data = await response.json();
       console.log("Success:", data);
-      upSubmission();
+      upSubmission(); // Trigger update after successful deletion
     } catch (error) {
       console.error("Error:", error);
       alert(`Error: ${error.message}`);
     } finally {
+      setIsDeleting(false); // Stop the loading state
       handleCloseModal(); // Ensure modal closes whether or not the delete was successful
     }
   };
@@ -61,47 +65,51 @@ const DeleteButton = ({ fileKey, upSubmission }) => {
           >
             &times;
           </button>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative"
-            style={{ minWidth: "450px" }}
-          >
-            {/* Close Button */}
-
-            {/* Warning Icon */}
-            <div className="flex justify-center">
-              <Image src={warningIcon} alt="Warning" width={50} height={50} />
+          {isDeleting ? (
+            <div className="flex justify-center w-screen h-screen bg-transparent">
+              <LoadingSpinner />
             </div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative"
+              style={{ minWidth: "450px" }}
+            >
+              {/* Warning Icon */}
+              <div className="flex justify-center">
+                <Image src={warningIcon} alt="Warning" width={50} height={50} />
+              </div>
 
-            {/* Modal Title */}
-            <h2 className="text-xl font-semibold text-center text-gray-800 mb-2">
-              Are you sure?
-            </h2>
+              {/* Modal Title */}
+              <h2 className="text-xl font-semibold text-center text-gray-800 mb-2">
+                Are you sure?
+              </h2>
 
-            {/* Modal Description */}
-            <p className="text-gray-600 text-center mb-6">
-              This action cannot be undone.
-            </p>
+              {/* Modal Description */}
+              <p className="text-gray-600 text-center mb-6">
+                This action cannot be undone.
+              </p>
 
-            {/* Buttons */}
-            <div className="flex justify-center space-x-4">
-              <button
-                className="px-6 py-2 bg-red text-white rounded-md hover:bg-rose-500 transition-all duration-300"
-                onClick={() => deleteFile(fileKey)}
-              >
-                Delete File
-              </button>
-              <button
-                className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-all duration-300"
-                onClick={handleCloseModal}
-              >
-                Cancel
-              </button>
-            </div>
-          </motion.div>
+              {/* Buttons */}
+              <div className="flex justify-center space-x-4">
+                <button
+                  className="px-6 py-2 bg-red text-white rounded-md hover:bg-rose-500 transition-all duration-300"
+                  onClick={() => deleteFile(fileKey)}
+                >
+                  Delete File
+                </button>
+                <button
+                  className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-all duration-300"
+                  onClick={handleCloseModal}
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          )}
         </div>
       )}
     </>

@@ -400,12 +400,6 @@ export default function Viewer() {
           <header className="p-3 flex justify-between items-center sticky top-0 left-0 bg-white z-10 max-h-pdfbar min-h-pdfbar font-inter">
             <h1>{title}</h1>
             <div className="flex">
-              {/* <button
-                className="special-button w-115"
-                onClick={handleUpgradeClick}
-              >
-                Upgrade
-              </button> */}
               {modalOpen && (
                 <div className="modal-background ">
                   <button

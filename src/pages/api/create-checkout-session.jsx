@@ -20,7 +20,7 @@ export default async (req, res) => {
     payment_method_types: ["card"],
     line_items: [
       {
-        price: "price_1P1b0tRquv3tbGOmCwd9PMnV", // Your Stripe Price ID
+        price: "price_1Q581YRquv3tbGOmCIk9o926", // Your Stripe Price ID
         quantity: 1,
       },
     ],

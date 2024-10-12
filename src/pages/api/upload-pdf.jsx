@@ -37,11 +37,10 @@ export default async function handler(req, res) {
   const usersCollection = database.collection("Users");
 
   const user = await usersCollection.findOne({ clerkUserId: userId });
-  console.log(user);
   const subscriptionStatus = user.subscriptionStatus;
   const pdfCount = user.pdfs ? user.pdfs.length : 0;
 
-  if (subscriptionStatus === false && pdfCount >= 5) {
+  if (subscriptionStatus === false && pdfCount >= 2) {
     return res
       .status(403)
       .json({ error: "Upload limit reached or inactive subscription" });
@@ -49,7 +48,6 @@ export default async function handler(req, res) {
 
   const form = new IncomingForm({ keepExtensions: true });
   console.log(pdfCount);
-  console.log(subscriptionStatus);
   const parseForm = () =>
     new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {

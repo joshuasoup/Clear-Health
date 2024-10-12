@@ -54,14 +54,14 @@ const Home = () => {
   }, [controls3, inView3]);
 
   return (
-    <div className="h-screen ">
+    <div className="h-screen">
       <Navbar />
       <motion.div
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ ease: "easeOut", duration: 0.5 }}
       >
-        <section className="w-full h-hero flex-center flex-col items-center flex align-middle">
+        <section className="w-full h-hero flex-center flex-col items-center flex align-middle px-8">
           <div className="max-w-page">
             <h1
               className="font-inter text-6xl pt-20 font-semibold py-10 tracking-tighter max-w-4xl text-center mx-auto px-8"

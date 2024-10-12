@@ -54,7 +54,7 @@ const PricingCatalog = () => {
   };
 
   return (
-    <div className="flex flex-row gap-2 h-catalog">
+    <div className="flex flex-col gap-2 md:flex-row">
       {/* Free Plan Card */}
       <motion.div
         className="bg-white rounded-md shadow-xl py-8 px-8 flex flex-col w-catalog border items-start justify-between"
@@ -103,7 +103,7 @@ const PricingCatalog = () => {
               Unlimited
             </h2>
             <p className="text-6xl font-medium text-gray-900">
-              $15
+              $9
               <span className="text-xl text-gray-500 font-medium">/month</span>
             </p>
           </div>

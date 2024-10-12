@@ -11,22 +11,21 @@ const Navbar = () => {
   const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
 
   return (
-    <nav className="bg-white ">
-      <div className="max-w-7xl mx-auto px-4 py-2 ">
+    <nav className="bg-white">
+      <div className="max-w-7xl mx-auto px-4 py-2">
         <div className="flex justify-between items-center h-16">
           {/* Brand and logo area */}
           <Link href="/">
             <div className="flex items-center text-gray-800 text-xl font-bold">
-              {/* Replace the src with your logo image path and adjust width and height accordingly */}
               <Image src={medicalLogo} alt="Logo" width={40} height={40} />
-              <span className="ml-3 font-inter  font-semibold tracking-tighter">
+              <span className="ml-3 font-inter font-semibold tracking-tighter">
                 Clear Health
               </span>
             </div>
           </Link>
 
-          {/* Centered navigation links */}
-          <div className="flex-1 flex justify-center items-center space-x-4">
+          {/* Centered navigation links (visible only on medium screens and above) */}
+          <div className="hidden md:flex flex-1 justify-center items-center space-x-4">
             <Link href="/about">
               <h1 className="text-gray-700 hover:text-gray-900 px-3">About</h1>
             </Link>
@@ -77,7 +76,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu (shown when isNavCollapsed is false) */}
       <div className={`${isNavCollapsed ? "hidden" : "block"} md:hidden`}>
         <Link href="/pricing">
           <h1 className="block py-2 px-4 text-sm hover:bg-gray-200">Pricing</h1>

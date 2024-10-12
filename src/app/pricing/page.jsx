@@ -4,8 +4,12 @@ import Navbar from "../../components/NavBar";
 import PricingCatalog from "../../components/PricingCatalog";
 import Footer from "../../components/Footer";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 const Page = () => {
+  useEffect(() => {
+    document.title = "Pricing Plans";
+  }, []);
   return (
     <div className="bg-white flex flex-col h-screen">
       <Navbar />
