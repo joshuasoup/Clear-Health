@@ -72,6 +72,7 @@ const UploadButton = (props) => {
 
       const uploadResult = await uploadResponse.json();
       const fileKey = uploadResult.fileKey;
+      const fileName = uploadResult.fileName;
 
       // Step 2: Call Pinecone API to process the file using the fileKey
       const pineconeResponse = await fetch("/api/upload-pinecone", {
@@ -93,7 +94,7 @@ const UploadButton = (props) => {
       setIsModalVisible(false);
       setSelectedFile(null);
       if (props.handleAction) {
-        props.handleAction(fileKey, fileKey);
+        props.handleAction(fileName, fileKey);
       }
     } catch (error) {
       console.error("Error during upload or Pinecone processing:", error);
@@ -102,9 +103,7 @@ const UploadButton = (props) => {
   };
 
   const toggleModal = () => {
-    
     setIsModalVisible(!isModalVisible);
-    
   };
 
   const handleCloseModal = () => {

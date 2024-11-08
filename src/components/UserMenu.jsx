@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 import PricingCatalog from "./PricingCatalog";
 import "../styles/viewer.css";
 
-const Menu = ({ onProfileClick }) => {
+const Menu = ({ onProfileClick, onUpgradeClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user } = useUser();
   const { signOut } = useClerk();
@@ -24,11 +24,6 @@ const Menu = ({ onProfileClick }) => {
   const handleOpenModal = () => {
     setModalOpen(true); // Open the modal when the button is clicked
   };
-
-  const handleCloseModal = () => {
-    setModalOpen(false); // Close the modal
-  };
-
   const toggleMenu = () => {
     setIsMenuOpen((prevState) => !prevState);
   };
@@ -83,6 +78,13 @@ const Menu = ({ onProfileClick }) => {
     }
   };
 
+  const handleUpgradeClick = () => {
+    setIsMenuOpen(false); // Close the menu
+    if (onUpgradeClick) {
+      onUpgradeClick(); // Call the parent function
+    }
+  };
+
   return (
     <motion.div className="menu-container" tabIndex="0">
       <div className="menu-bar" onClick={toggleMenu} ref={buttonRef}>
@@ -97,7 +99,7 @@ const Menu = ({ onProfileClick }) => {
         >
           <button
             className="user-item flex flex-row items-center"
-            onClick={handleOpenModal}
+            onClick={handleUpgradeClick}
             onBlur={closeMenu} // Close the modal when focus is lost
           >
             <Image
@@ -109,25 +111,6 @@ const Menu = ({ onProfileClick }) => {
             />
             Upgrade
           </button>
-
-          {modalOpen && (
-            <div className=" modal-background w-screen h-screen">
-              <button
-                className="absolute top-4 right-6 text-white font-semibold text-3xl hover:text-slate-300"
-                onClick={handleCloseModal}
-              >
-                &times;
-              </button>
-              <motion.div
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ ease: "easeOut", duration: 0.5 }}
-                className="modal-content  w-200"
-              >
-                <PricingCatalog /> {/* Content of the modal */}
-              </motion.div>
-            </div>
-          )}
           {/* Use the onProfileClick prop passed from the parent */}
           <button
             className="user-item flex flex-row items-center"

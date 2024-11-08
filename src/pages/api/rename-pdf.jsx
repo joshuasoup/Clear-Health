@@ -1,4 +1,3 @@
-// Assume this is inside your pages/api directory in a file like updateFileName.js
 import clientPromise from "../../lib/mongo/db";
 import { getAuth } from "@clerk/nextjs/server";
 

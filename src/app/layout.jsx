@@ -1,7 +1,6 @@
 import "../styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { TokenProvider } from "../contexts/TokenContext";
-import { neobrutalism } from "@clerk/themes";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -15,15 +14,13 @@ export const metadata = {
 
 const RootLayout = ({ children }) => {
   return (
-    <ClerkProvider
-      appearance={{
-        baseTheme: neobrutalism,
-      }}
-    >
+    <ClerkProvider>
       <TokenProvider>
         <html lang="en">
           <body>
             <main className="app">{children}</main>
+            <Analytics />
+            <SpeedInsights />
           </body>
         </html>
       </TokenProvider>

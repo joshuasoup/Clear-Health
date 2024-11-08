@@ -111,9 +111,8 @@ export default function Viewer() {
   };
 
   const submitRename = async (key, newName) => {
-    const url = "/api/rename-pdf"; // Adjust the URL to match your API route
+    const url = "/api/rename-pdf";
     const body = JSON.stringify({ fileId: key, newName });
-
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -174,7 +173,6 @@ export default function Viewer() {
         setSelectedPdfUrl(data.presignedUrl);
         toggleActive(key);
         setCurrentFileKey(key);
-        console.log(name);
         setSelectedTitle(name);
       })
 
@@ -182,11 +180,6 @@ export default function Viewer() {
         console.error("Error fetching pre-signed URL:", error);
       });
   }
-
-  const handleUpgradeClick = () => {
-    setModalOpen(true);
-    document.body.style.overflow = "hidden";
-  };
 
   const handleClick = () => {
     setShowComponent(!showComponent);
@@ -197,9 +190,8 @@ export default function Viewer() {
     setIsOpen(false);
   };
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    document.body.style.overflow = "unset";
+  const toggleUpgradeModal = () => {
+    setModalOpen((prev) => !prev);
   };
 
   const toggleSidebar = () => {
@@ -220,6 +212,25 @@ export default function Viewer() {
 
   return (
     <div className="flex flex-col h-screen">
+      {modalOpen && (
+        <div className="modal-background w-screen h-screen z-50">
+          <button
+            className="absolute top-4 right-6 text-white font-semibold text-3xl hover:text-slate-300"
+            onClick={toggleUpgradeModal}
+          >
+            &times;
+          </button>
+
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ ease: "easeOut", duration: 0.5 }}
+            className="modal-content w-200"
+          >
+            <PricingCatalog />
+          </motion.div>
+        </div>
+      )}
       {showUserProfile && (
         <div>
           <motion.div
@@ -227,7 +238,7 @@ export default function Viewer() {
             initial={{ opacity: 0 }} // Start with 0 opacity
             animate={{ opacity: 1 }} // Animate to full opacity
             exit={{ opacity: 0 }} // Animate to 0 opacity when closing
-            onClick={toggleUserProfile} // Close when clicking on the background
+            onClick={toggleUserProfile}
           />
           <motion.div
             className="fixed inset-0 flex items-center justify-center z-50"
@@ -257,7 +268,7 @@ export default function Viewer() {
             isOpen
               ? "bg-menu border-slate-200 border shadow-md flex-1 min-w-menu overflow-x-hidden"
               : "bg-transparent border-transparent shadow-none w-12 min-w-12"
-          }  transition-all duration-500 ease-in-out p-3 overflow-y-auto  flex flex-col h-full whitespace-nowrap`}
+          } transition-all duration-500 ease-in-out p-3 overflow-y-auto flex flex-col h-full whitespace-nowrap`}
         >
           {isOpen && (
             <>
@@ -371,11 +382,14 @@ export default function Viewer() {
                 <div></div>
               </div>
               <hr className="m-3" />
-              <UserMenu onProfileClick={toggleUserProfile} />
+              <UserMenu
+                onProfileClick={toggleUserProfile}
+                onUpgradeClick={toggleUpgradeModal}
+              />
               {!isSubscribed && (
                 <button
                   className="special-button mt-2"
-                  onClick={handleUpgradeClick}
+                  onClick={toggleUpgradeModal}
                 >
                   Upgrade
                 </button>
@@ -400,24 +414,6 @@ export default function Viewer() {
           <header className="p-3 flex justify-between items-center sticky top-0 left-0 bg-white z-10 max-h-pdfbar min-h-pdfbar font-inter">
             <h1>{title}</h1>
             <div className="flex">
-              {modalOpen && (
-                <div className="modal-background ">
-                  <button
-                    className="absolute top-4 right-6 text-white font-semibold text-3xl hover:text-slate-300"
-                    onClick={handleCloseModal}
-                  >
-                    &times;
-                  </button>
-                  <motion.div
-                    initial={{ y: 100, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ ease: "easeOut", duration: 0.5 }}
-                    className="modal-content w-200"
-                  >
-                    <PricingCatalog />
-                  </motion.div>
-                </div>
-              )}
               {!showComponent && (
                 <button
                   className="button text-gray-500 mr-0 font-semibold flex flex-row items-center"

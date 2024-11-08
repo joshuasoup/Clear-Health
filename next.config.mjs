@@ -6,7 +6,7 @@ const setupCronJob = () => {
   console.log("Token resetting at: 23:59");
 
   try {
-    const response = await fetch("http://localhost:3000/api/reset-token", {
+    const response = await fetch("http://clearhealth.care/api/reset-token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

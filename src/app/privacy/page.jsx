@@ -3,6 +3,7 @@ import React from "react";
 import Navbar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import { useEffect } from "react";
+import "../../styles/privacy.css";
 
 const page = () => {
   useEffect(() => {
@@ -11,28 +12,28 @@ const page = () => {
   return (
     <>
       <Navbar />
-      <div className="max-w-4xl mx-auto py-12 px-4">
+      <div className="max-w-5xl mx-auto py-12 px-10 text-left">
         {/* Heading */}
-        <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
+        <h1 className="font-bold mb-8 text-7xl">Privacy Policy</h1>
 
         {/* Introduction */}
         <p>Your privacy is critically important to us.</p>
 
         <p>
-          It is <strong>[Your Company Name]</strong>'s policy to respect your
-          privacy regarding any information we may collect while operating our
-          website. This Privacy Policy applies to{" "}
+          It is <strong>Clear Health</strong>'s policy to respect your privacy
+          regarding any information we may collect while operating our website.
+          This Privacy Policy applies to{" "}
           <a
-            href="[Your Website URL]"
+            href="https://clearhealth.care/"
             className="text-blue-600 hover:underline"
           >
-            [Your Website URL]
+            Clear Health
           </a>{" "}
           (hereinafter, "us", "we", or "our website"). We respect your privacy
           and are committed to protecting personally identifiable information
           you may provide us through the website. This Privacy Policy, together
           with our{" "}
-          <a href="/terms-of-service" className="text-blue-600 hover:underline">
+          <a href="/terms-of-use" className="text-blue-600 hover:underline">
             Terms and Conditions
           </a>{" "}
           posted on our website, set forth the general rules and policies
@@ -40,42 +41,26 @@ const page = () => {
         </p>
 
         {/* Website Visitors */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">Website Visitors</h2>
+        <h2 className="text-4xl font-semibold mt-8 mb-4">Website Visitors</h2>
         <p>
           Like most website operators, we collect non-personally-identifying
           information typically made available by web browsers and servers, such
           as the browser type, language preference, referring site, and the date
           and time of each visitor request. Our purpose in collecting
           non-personally-identifying information is to better understand how our
-          visitors use the website. From time to time, we may release
-          non-personally-identifying information in the aggregate, e.g., by
-          publishing a report on website usage trends.
-        </p>
-        <p>
-          We also collect potentially personally-identifying information like
-          Internet Protocol (IP) addresses for logged-in users and for users
-          leaving comments on our blog posts. We only disclose logged-in user
-          and commenter IP addresses under the same circumstances that we use
-          and disclose personally-identifying information as described below.
+          visitors use the website.
         </p>
 
         {/* Information We Collect */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">
+        <h2 className="text-4xl font-semibold mt-8 mb-4">
           Information We Collect
         </h2>
-        <p>We collect information from you when you:</p>
-        <ul className="list-disc pl-6">
-          <li>Register on our site</li>
-          <li>Place an order</li>
-          <li>Subscribe to our newsletter</li>
-          <li>Respond to a survey</li>
-          <li>Fill out a form</li>
-        </ul>
         <p>
-          When ordering or registering on our site, as appropriate, you may be
-          asked to enter:
+          We collect information from you when you register on our site, or
+          making a payment. When registering on our site, as appropriate, you
+          may be asked to enter:
         </p>
-        <ul className="list-disc pl-6">
+        <ul className="list-disc pl-6 ml-4">
           <li>Your name</li>
           <li>Email address</li>
           <li>Mailing address</li>
@@ -84,26 +69,14 @@ const page = () => {
         </ul>
         <p>You may, however, visit our site anonymously.</p>
 
-        {/* Credit Card Information */}
-        <h3 className="text-xl font-semibold mt-8 mb-4">
-          Credit Card Information
-        </h3>
-        <p>
-          We use Canada’s leading payment processor—<strong>Moneris</strong>—to
-          process your credit card payments. Moneris stores all credit card
-          information and conducts the entire credit card transaction using
-          industry-standard 128-bit SSL encryption. We only store a record that
-          the transaction took place.
-        </p>
-
         {/* How We Use Your Information */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">
+        <h2 className="text-4xl font-semibold mt-8 mb-4">
           How We Use Your Information
         </h2>
         <p>
           The information we collect from you may be used in the following ways:
         </p>
-        <ul className="list-disc pl-6">
+        <ul className="list-disc pl-6 ml-4 ">
           <li>To personalize your experience</li>
           <li>To improve our website</li>
           <li>To enhance customer service</li>
@@ -113,8 +86,8 @@ const page = () => {
         </ul>
 
         {/* Email Usage */}
-        <h3 className="text-xl font-semibold mt-8 mb-4">Email Usage</h3>
-        <ul className="list-disc pl-6">
+        <h3 className="text-4xl font-semibold mt-8 mb-4">Email Usage</h3>
+        <ul className="list-disc pl-6 ml-4">
           <li>
             Your email address will not be sold, rented, or leased to third
             parties.
@@ -122,15 +95,10 @@ const page = () => {
           <li>
             If you make a purchase, we will send you a confirmation email.
           </li>
-          <li>
-            If you sign up for our mailing list, we will send you informational
-            emails about service offers. You can unsubscribe at any time by
-            clicking the 'unsubscribe' link in our emails.
-          </li>
         </ul>
 
         {/* Protection of Information */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">
+        <h2 className="text-4xl font-semibold mt-8 mb-4">
           Protection of Certain Personally-Identifying Information
         </h2>
         <p>
@@ -138,7 +106,7 @@ const page = () => {
           personally-identifying information only to those of our employees,
           contractors, and affiliated organizations that:
         </p>
-        <ol className="list-decimal pl-6">
+        <ol className="list-decimal pl-6 ml-4">
           <li>
             Need to know that information in order to process it on our behalf
             or to provide services available at our website.
@@ -161,14 +129,14 @@ const page = () => {
         </p>
 
         {/* Security */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">Security</h2>
+        <h2 className="text-4xl font-semibold mt-8 mb-4">Security</h2>
         <p>
           The security of your personal information is important to us. We
           implement a variety of security measures to maintain the safety of
           your personal information when you place an order or access your
           personal information.
         </p>
-        <ul className="list-disc pl-6">
+        <ul className="list-disc pl-6 ml-4">
           <li>We offer the use of a secure server.</li>
           <li>
             All supplied sensitive/credit information is transmitted via Secure
@@ -187,21 +155,20 @@ const page = () => {
         </p>
 
         {/* Use of Cookies */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">Use of Cookies</h2>
+        <h2 className="text-4xl font-semibold mt-8 mb-4">Use of Cookies</h2>
         <p>
           Our website uses "cookies" to enhance your experience. A cookie is a
           small piece of data stored on your computer by your web browser.
         </p>
-        <h3 className="text-xl font-semibold mt-8 mb-4">Purpose of Cookies</h3>
-        <ul className="list-disc pl-6">
+        <h3 className="text-4xl font-semibold mt-8 mb-4">Purpose of Cookies</h3>
+        <ul className="list-disc pl-6 ml-4">
           <li>To help us remember and process items in your shopping cart.</li>
-          <li>To understand and save your preferences for future visits.</li>
           <li>
             To compile aggregate data about site traffic and interaction to
             improve our website in the future.
           </li>
         </ul>
-        <h3 className="text-xl font-semibold mt-8 mb-4">
+        <h3 className="text-4xl font-semibold mt-8 mb-4">
           Third-Party Services
         </h3>
         <p>
@@ -210,7 +177,7 @@ const page = () => {
           not permitted to use the information collected on our behalf except to
           help us conduct and improve our business.
         </p>
-        <h3 className="text-xl font-semibold mt-8 mb-4">Cookie Management</h3>
+        <h3 className="text-4xl font-semibold mt-8 mb-4">Cookie Management</h3>
         <p>
           You can choose to have your computer warn you each time a cookie is
           being sent or turn off all cookies via your browser settings. If you
@@ -218,48 +185,8 @@ const page = () => {
           However, you can still place orders by contacting customer service.
         </p>
 
-        {/* Do We Disclose Information to Outside Parties? */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">
-          Do We Disclose Information to Outside Parties?
-        </h2>
-        <p>
-          We do not sell, trade, or otherwise transfer your personally
-          identifiable information to outside parties. This does not include
-          trusted third parties who assist us in operating our website,
-          conducting our business, or servicing you, provided they agree to keep
-          this information confidential.
-        </p>
-        <p>
-          We may also release your information when we believe it is appropriate
-          to:
-        </p>
-        <ul className="list-disc pl-6">
-          <li>Comply with the law</li>
-          <li>Enforce our site policies</li>
-          <li>Protect ours or others' rights, property, or safety</li>
-        </ul>
-        <p>
-          Non-personally identifiable visitor information may be provided to
-          other parties for marketing, advertising, or other uses.
-        </p>
-
-        {/* Third-Party Links */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">Third-Party Links</h2>
-        <p>
-          Occasionally, we may include or offer third-party products or services
-          on our website. These third-party sites have separate and independent
-          privacy policies. We have no responsibility or liability for the
-          content and activities of these linked sites. Nonetheless, we strive
-          to protect the integrity of our site and welcome any feedback about
-          these sites.
-        </p>
-
-        {/* Your Consent */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">Your Consent</h2>
-        <p>By using our site, you consent to our Privacy Policy.</p>
-
         {/* Changes to Our Privacy Policy */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">
+        <h2 className="text-4xl font-semibold mt-8 mb-4">
           Changes to Our Privacy Policy
         </h2>
         <p>
@@ -269,7 +196,7 @@ const page = () => {
         </p>
 
         {/* Contacting Us */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">Contacting Us</h2>
+        <h2 className="text-4xl font-semibold mt-8 mb-4">Contacting Us</h2>
         <p>
           If you have any questions about this Privacy Policy, please contact us
           at:
@@ -277,25 +204,25 @@ const page = () => {
         <p>
           <strong>Email:</strong>{" "}
           <a
-            href="mailto:your-email@example.com"
+            href="mailto:joshuasouphanthong55@gmail.com"
             className="text-blue-600 hover:underline"
           >
-            your-email@example.com
+            joshuasouphanthong55@gmail.com
           </a>
-          <br />
-          <strong>Address:</strong> [Your Company Address]
           <br />
           <strong>Phone:</strong>{" "}
           <a
-            href="tel:your-contact-number"
+            href="tel:+1 (437)-775-4514"
             className="text-blue-600 hover:underline"
           >
-            [Your Contact Number]
+            +1 (437)-775-4514
           </a>
         </p>
 
         {/* Effective Date */}
-        <p className="text-sm text-gray-500 mt-8">Effective Date: [Date]</p>
+        <p className="text-sm text-gray-500 mt-8">
+          Effective Date: November 6, 2024
+        </p>
       </div>
       <Footer />
     </>

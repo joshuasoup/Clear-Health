@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import medicalLogo from "../assets/images/clearhealthlogo.png";
 import { useUser } from "@clerk/clerk-react";
+import "../styles/globals.css";
 
 const Navbar = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
@@ -18,7 +19,7 @@ const Navbar = () => {
           <Link href="/">
             <div className="flex items-center text-gray-800 text-xl font-bold">
               <Image src={medicalLogo} alt="Logo" width={40} height={40} />
-              <span className="ml-3 font-inter font-semibold tracking-tighter">
+              <span className="ml-2 font-inter font-semibold tracking-tighter text-2xl">
                 Clear Health
               </span>
             </div>
@@ -44,10 +45,15 @@ const Navbar = () => {
           {/* Auth buttons */}
           <div className="hidden md:flex items-center space-x-2">
             <Link href={user ? "/pdf-viewer" : "/sign-in"}>
-              <h1 className="text-gray-700 hover:text-gray-900 px-3">Log In</h1>
+              <h1 className="text-gray-700 hover:text-gray-900 px-3 mr-4">
+                Log In
+              </h1>
             </Link>
             <Link href="/sign-out">
-              <h1 className="px-5 py-2 rounded-md bg-red-600 text-white">
+              <h1
+                className="special-button"
+                style={{ fontWeight: "599", letterSpacing: ".7px" }}
+              >
                 Start Learning
               </h1>
             </Link>

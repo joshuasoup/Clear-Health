@@ -93,7 +93,7 @@ const page = () => {
               className="bg-white border border-gray-100 p-6 rounded-lg shadow-lg"
               variants={fadeInUp}
             >
-              <h3 className="text-xl sm:text-2xl font-semibold mb-4">
+              <h3 className="text-xl md:text-2xl font-semibold mb-4">
                 Empowerment Through Knowledge
               </h3>
               <p className="text-gray-700 text-sm sm:text-base">
@@ -131,7 +131,7 @@ const page = () => {
             className="text-3xl sm:text-4xl lg:text-6xl font-bold text-black mb-4"
             variants={fadeInUp}
           >
-            Founders
+            Founder
           </motion.h2>
           <div className="mt-10 flex flex-col sm:flex-row justify-start items-stretch gap-8">
             {/* Image and Name Section */}

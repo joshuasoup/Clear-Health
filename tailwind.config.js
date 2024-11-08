@@ -46,7 +46,7 @@ module.exports = {
       },
       height: {
         catalog: '560px',
-        hero: '600px',
+        hero: '500px',
       },
       backgroundImage: {
         'fade-left': 'linear-gradient(to right, rgba(255, 255, 255, 0), rgba(250, 250, 252, 0.5))', 

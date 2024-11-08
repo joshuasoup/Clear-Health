@@ -64,10 +64,10 @@ const Home = () => {
         <section className="w-full h-hero flex-center flex-col items-center flex align-middle px-8">
           <div className="max-w-page">
             <h1
-              className="font-inter text-6xl pt-20 font-semibold py-10 tracking-tighter max-w-4xl text-center mx-auto px-8"
+              className="font-inter lg:text-7xl sm:text-6xl text-5xl pt-20 font-semibold py-10 tracking-tighter max-w-4xl text-center leading-tight mx-auto px-8"
               style={{ lineHeight: "1.2" }}
             >
-              Learn to read medical reports on your own
+              Medical reports made simple, so you can focus on your health.
             </h1>
             <p className="max-w-lg text-center mx-auto leading-7 font-inter text-neutral-500 text-lg">
               ClearHealth's AI-powered assistant will allow you to take control
@@ -95,7 +95,7 @@ const Home = () => {
 
         {/* Dynamic Tooltips for Quick Definitions Section */}
         <motion.section
-          className="w-full flex flex-row justify-center items-center py-16 bg-gray-100 min-h-hero px-20"
+          className="w-full flex flex-row justify-center items-center py-16 min-h-hero px-20"
           ref={ref1}
           initial={{ opacity: 0, y: 100 }}
           animate={controls1}
@@ -219,7 +219,7 @@ const Home = () => {
         {/* Chatbot section */}
         <motion.section
           ref={ref3}
-          className="w-full flex flex-row justify-center items-center py-16 bg-gray-100 min-h-hero px-20"
+          className="w-full flex flex-row justify-center items-center py-16 min-h-hero px-20"
           initial={{ opacity: 0, y: 100 }} // Starting state (hidden and shifted left)
           animate={controls3} // Controls the animation when in view
         >

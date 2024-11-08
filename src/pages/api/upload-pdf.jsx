@@ -13,7 +13,8 @@ export const config = {
 
 async function uploadFileToS3(file) {
   const fileContent = fs.readFileSync(file[0].filepath);
-  const key = file[0].originalFilename; // Ensure this is unique if necessary
+  const { v4: uuidv4 } = require("uuid");
+  const key = `${uuidv4()}`; // Ensure this is unique if necessary
 
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
@@ -83,6 +84,7 @@ export default async function handler(req, res) {
       message: "PDF uploaded and metadata added successfully",
       userId: userId,
       fileKey,
+      fileName: pdfFile[0].originalFilename,
     });
   } catch (e) {
     console.error("Server error:", e);

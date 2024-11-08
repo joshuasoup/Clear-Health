@@ -83,7 +83,6 @@ const PricingCatalog = () => {
         <button
           className="bg-white hover:bg-slate-100 border font-normal px-8 h-12 rounded-md transition duration-300 w-full bottom-0 mt-4"
           onClick={handleFreeClick}
-          whileHover="hover"
         >
           Try Now
         </button>
@@ -120,7 +119,6 @@ const PricingCatalog = () => {
         <button
           className="bg-red hover:bg-rose-600 text-white font-normal px-8 h-12 rounded-md transition duration-300 w-full mt-4"
           onClick={handleButtonClick}
-          whileHover="hover"
         >
           Subscribe
         </button>
