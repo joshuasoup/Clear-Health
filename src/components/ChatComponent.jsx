@@ -75,6 +75,7 @@ export default function ChatComponent({ callhandleClick, fileKey }) {
             width={35}
             height={35}
             className="mt-4 mb-2 rounded-md hover:bg-gray-200"
+            alt="Clear Chat"
           />
         </button>
       </div>

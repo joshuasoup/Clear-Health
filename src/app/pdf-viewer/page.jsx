@@ -302,7 +302,10 @@ export default function Viewer() {
                   Documents
                 </p>
               </div>
-              <UploadButton handleAction={handleAction} />
+              <UploadButton
+                handleAction={handleAction}
+                toggleUpgradeModal={toggleUpgradeModal}
+              />
               <div className="flex flex-col flex-grow overflow-y-auto">
                 <ul>
                   {PDFs.map((pdf) => (
@@ -379,7 +382,6 @@ export default function Viewer() {
                     </li>
                   ))}
                 </ul>
-                <div></div>
               </div>
               <hr className="m-3" />
               <UserMenu
@@ -419,7 +421,12 @@ export default function Viewer() {
                   className="button text-gray-500 mr-0 font-semibold flex flex-row items-center"
                   onClick={openChat}
                 >
-                  <Image src={message} width={18} className="mr-2" />
+                  <Image
+                    src={message}
+                    width={18}
+                    className="mr-2"
+                    alt="Chat Button"
+                  />
                   Chat
                 </button>
               )}
@@ -438,7 +445,11 @@ export default function Viewer() {
               </button>
             </div>
           </header>
-          <PDFLoader pdfUrl={selectedPdfUrl} className="z-20" />
+          <PDFLoader
+            pdfUrl={selectedPdfUrl}
+            toggleUpgradeModal={toggleUpgradeModal}
+            className="z-20"
+          />
           <div
             className="rounded-md bg-slate-100 w-1/2 sticky bottom-5 m-auto min-w-44 z-6"
             style={{ maxWidth: "550px" }}

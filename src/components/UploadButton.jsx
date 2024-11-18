@@ -62,6 +62,8 @@ const UploadButton = (props) => {
 
       if (uploadResponse.status === 403) {
         setIsUploading(false);
+        setSelectedFile(null);
+        setIsModalVisible(false);
         setShowUpgradeModal(true);
         return;
       }
@@ -115,6 +117,10 @@ const UploadButton = (props) => {
     setSelectedFile(null);
   };
 
+  const openUpgradeModal = () => {
+    props.toggleUpgradeModal();
+  };
+
   return (
     <>
       <button
@@ -126,12 +132,8 @@ const UploadButton = (props) => {
         <Image src={plus} alt="plus" width={16} height={18} className="pr-2" />
       </button>
 
-      {isModalVisible && (
+      {isModalVisible && !showUpgradeModal && (
         <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-40">
-          <UpgradeModal
-            showModal={showUpgradeModal}
-            setShowModal={setShowUpgradeModal}
-          />
           <button
             className="absolute top-4 right-6 text-white font-semibold text-3xl hover:text-slate-300"
             onClick={handleCloseModal}
@@ -234,6 +236,14 @@ const UploadButton = (props) => {
             )}
           </motion.div>
         </div>
+      )}
+
+      {showUpgradeModal && (
+        <UpgradeModal
+          showModal={showUpgradeModal}
+          setShowModal={setShowUpgradeModal}
+          openUpgradeModal={openUpgradeModal}
+        />
       )}
     </>
   );

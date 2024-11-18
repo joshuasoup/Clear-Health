@@ -117,7 +117,12 @@ const Menu = ({ onProfileClick, onUpgradeClick }) => {
             onBlur={closeMenu}
             onClick={handleProfileClick}
           >
-            <Image src={profile} width={20} className="mr-2" />
+            <Image
+              src={profile}
+              width={20}
+              className="mr-2"
+              alt="Profile Picture"
+            />
             My Profile
           </button>
 
@@ -130,7 +135,7 @@ const Menu = ({ onProfileClick, onUpgradeClick }) => {
             onBlur={closeMenu}
             className="user-item flex flex-row centre items-center"
           >
-            <Image src={exit} width={20} className="mr-2" />
+            <Image src={exit} width={20} className="mr-2" alt="Sign out" />
             Sign out
           </button>
         </div>

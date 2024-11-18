@@ -43,7 +43,7 @@ const page = () => {
   };
 
   return (
-    <div className="bg-white flex flex-col min-h-screen px-8 sm:px-8">
+    <div className="bg-white flex flex-col min-h-screen">
       <Navbar />
       <div className="mx-auto py-12 max-w-7xl px-4 sm:px-6 lg:px-24">
         {/* Mission Section */}

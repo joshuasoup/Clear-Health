@@ -10,13 +10,13 @@ const TokenProgressBar = ({ parentRef }) => {
   const [color, setColor] = useState("");
   let percentage = (usedTokens / maxTokens) * 100;
   if (percentage > 100) {
-    percentage = 10;
+    percentage = 100;
   }
 
   // Adjust percentage and set color based on different intervals
   useEffect(() => {
     if (percentage >= 75) {
-      setColor("#870e00"); // Red color for high usage
+      setColor("#ff1a00"); // Red color for high usage
     } else if (percentage >= 50) {
       setColor("#ffc107"); // Yellow color for medium usage
     } else {

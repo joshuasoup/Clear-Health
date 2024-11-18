@@ -15,7 +15,7 @@ export const useToken = () => {
 
 export const TokenProvider = ({ children }) => {
   const [usedTokens, setUsedTokens] = useState(0);
-  const [maxTokens, setMaxTokens] = useState(1000); // Default value, you can adjust as needed
+  const [maxTokens, setMaxTokens] = useState(500); // Default value, you can adjust as needed
   const [loading, setLoading] = useState(true);
 
   const fetchTokenUsage = useCallback(async () => {

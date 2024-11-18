@@ -3,7 +3,7 @@ import { WebhookEvent } from '@clerk/nextjs/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { buffer } from 'micro';
 import clientPromise from '../../../lib/mongo/db';
-import s3Client from '../../../lib/aws/db'
+import s3Client from '../../../lib/aws/db';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 export const config = {
@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!WEBHOOK_SECRET) {
     throw new Error('Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local');
   }
-
+  
   // Get Svix headers for verification
   const svix_id = req.headers['svix-id'] as string;
   const svix_timestamp = req.headers['svix-timestamp'] as string;
@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Read the request body as raw buffer
   const body = (await buffer(req)).toString();
-
+  
   // Create a new Svix instance for webhook verification
   const wh = new Webhook(WEBHOOK_SECRET);
   let evt: WebhookEvent;
@@ -58,7 +58,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const eventType = evt.type;
   const clerkId = evt.data.id;
   
-
   // Connect to MongoDB
   const client = await clientPromise;
   const database = client.db('userdata');
@@ -75,7 +74,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         pdfs: [],                 // Initialize with an empty PDF array
         tokensUsed: 0,            // Initialize tokens used
         subscriptionStatus: false, // Initialize subscription status
-        email: email
+        email: email,
+        maxTokens: 500
       });
       
       console.log('User inserted into MongoDB:', clerkId);
@@ -86,33 +86,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } else if (eventType === 'user.deleted') {
 
-      // Fetch the user’s files from MongoDB
-      const user = await usersCollection.findOne({ clerkUserId: clerkId });
-      if (!user) {
-        console.log('No user found');
-      } else {
-        // Loop through each file key and delete the file from S3
-        if( user.pdfs ) {
-          for (const file of user.pdfs) {
-            const deleteParams = {
-              Bucket: process.env.AWS_S3_BUCKET_NAME,
-              Key: file.key, // File key in S3
-            };
-            await s3Client.send(new DeleteObjectCommand(deleteParams));
-            console.log(`Deleted file from S3: ${file.key}`);
-          }
-        }
-        
-        // Delete the user from MongoDB
-        const deleteResult = await usersCollection.deleteOne({ clerkUserId: clerkId });
-
-        if (deleteResult.deletedCount === 1) {
-          console.log('User and files deleted from MongoDB:', clerkId);
-        } else {
-          console.error('User not found or already deleted from MongoDB:', clerkId);
+    // Fetch the user’s files from MongoDB
+    const user = await usersCollection.findOne({ clerkUserId: clerkId });
+    if (!user) {
+      console.log('No user found');
+    } else {
+      // Loop through each file key and delete the file from S3
+      if (user.pdfs) {
+        for (const file of user.pdfs) {
+          const deleteParams = {
+            Bucket: process.env.AWS_S3_BUCKET_NAME,
+            Key: file.key, // File key in S3
+          };
+          await s3Client.send(new DeleteObjectCommand(deleteParams));
+          console.log(`Deleted file from S3: ${file.key}`);
         }
       }
+      
+      // Delete the user from MongoDB
+      const deleteResult = await usersCollection.deleteOne({ clerkUserId: clerkId });
+
+      if (deleteResult.deletedCount === 1) {
+        console.log('User and files deleted from MongoDB:', clerkId);
+      } else {
+        console.error('User not found or already deleted from MongoDB:', clerkId);
+      }
     }
+  }
   // Return success response
   return res.status(200).json({ response: 'Success' });
 }

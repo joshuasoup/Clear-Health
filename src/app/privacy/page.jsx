@@ -12,7 +12,7 @@ const page = () => {
   return (
     <>
       <Navbar />
-      <div className="max-w-5xl mx-auto py-12 px-10 text-left">
+      <div className="max-w-6xl mx-auto py-12 px-14 text-left">
         {/* Heading */}
         <h1 className="font-bold mb-8 text-7xl">Privacy Policy</h1>
 

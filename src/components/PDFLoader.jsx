@@ -9,6 +9,7 @@ import "../../node_modules/react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "../styles/globals.css";
 import ToolTip from "./ToolTip";
 import { motion } from "framer-motion";
+import UpgradeModal from "./UpgradeModal";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -26,12 +27,13 @@ const typingVariants = {
   },
 };
 
-const PDFLoader = ({ pdfUrl }) => {
+const PDFLoader = ({ pdfUrl, toggleUpgradeModal }) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const documentContainerRef = useRef();
   const [pageHeight, setPageHeight] = useState(window.innerHeight * 0.8);
   const [selectedText, setSelectedText] = useState("");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const NavigationButton = ({ direction, isDisabled, onClick }) => (
     <button
@@ -79,6 +81,10 @@ const PDFLoader = ({ pdfUrl }) => {
     };
   }, []);
 
+  const openUpgradeModal = () => {
+    setShowUpgradeModal(true);
+  };
+
   return (
     <div className="flex flex-col flex-1 justify-center">
       <div
@@ -87,7 +93,11 @@ const PDFLoader = ({ pdfUrl }) => {
       >
         {pdfUrl ? (
           <>
-            <ToolTip tooltipText={selectedText} ref={documentContainerRef} />
+            <ToolTip
+              tooltipText={selectedText}
+              ref={documentContainerRef}
+              toggleUpgradeModal={openUpgradeModal}
+            />
             <NavigationButton
               direction="left"
               isDisabled={pageNumber <= 1}
@@ -139,6 +149,15 @@ const PDFLoader = ({ pdfUrl }) => {
           <p className="text-sm font-inter">
             Page {pageNumber} of {numPages}
           </p>
+        </div>
+      )}
+      {showUpgradeModal && (
+        <div className="absolute w-screen h-screen top-0 left-0">
+          <UpgradeModal
+            showModal={showUpgradeModal}
+            setShowModal={setShowUpgradeModal}
+            openUpgradeModal={toggleUpgradeModal}
+          />
         </div>
       )}
     </div>

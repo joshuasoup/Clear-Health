@@ -7,8 +7,8 @@ const page = () => {
   return (
     <div>
       <Navbar />
-      <main className="container mx-auto px-10 py-10 text-left max-w-5xl">
-        <h1 className="text-7xl font-bold mb-6">Terms and Conditions</h1>
+      <main className="container mx-auto px-14 py-10 text-left max-w-6xl">
+        <h1 className="text-7xl font-bold mb-8">Terms and Conditions</h1>
 
         <section className="mb-6">
           <h2 className="text-4xl font-semibold mb-4">
@@ -111,15 +111,18 @@ const page = () => {
             If you have any questions about these Terms and Conditions, please
             contact us at
             <a
-              href="mailto:support@clearhealth.care"
+              href="mailto:joshuasouphanthong55@gmail.com"
               className="text-blue-600 underline"
             >
               {" "}
-              support@clearhealth.care
+              joshuasouphanthong55@gmail.com
             </a>
             .
           </p>
         </section>
+        <p className="text-sm text-gray-500 mt-8">
+          Effective Date: November 6, 2024
+        </p>
       </main>
       <Footer />
     </div>

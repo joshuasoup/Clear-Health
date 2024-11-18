@@ -45,6 +45,7 @@ export default async (req, res) => {
           $set: {
             subscriptionId: subscriptionId,
             subscriptionStatus: true, // Assume this is how you're tracking the active subscription
+            maxTokens: 10000,
           },
         }
       );

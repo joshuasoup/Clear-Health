@@ -9,7 +9,7 @@ import glass from "../assets/images/magnifyingglass.png";
 import bulb from "../assets/images/secondbulb.png";
 import Image from "next/image";
 
-const ToolTip = forwardRef(({ tooltipText }, ref) => {
+const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [contentMode, setContentMode] = useState("buttons"); // 'buttons' or 'text'
@@ -18,7 +18,7 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
   const tooltipRef = useRef();
   const [source, setSource] = useState(null);
   const baseToolTipHeight = 40;
-  const { fetchTokenUsage } = useToken();
+  const { fetchTokenUsage, usedTokens, maxTokens } = useToken();
 
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -205,6 +205,11 @@ const ToolTip = forwardRef(({ tooltipText }, ref) => {
   }
 
   const handleExplainSubmit = async (e) => {
+    if (usedTokens >= maxTokens) {
+      toggleUpgradeModal();
+      setIsVisible(false);
+      return;
+    }
     e.preventDefault();
     setContentMode("text");
     setExplanation("");

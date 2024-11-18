@@ -5,11 +5,11 @@ import Image from "next/image";
 
 const Footer = () => {
   return (
-    <footer className=" text-white pt-10 pb-8 min-h-56 md:px-20 px-4 bottom-0">
+    <footer className=" text-white pt-10 pb-8 min-h-56 md:px-20 px-8 bottom-0">
       <div>
         <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
           <div className="md:flex md:justify-between">
-            <div className="mb-6 md:mb-0 min-w-fit">
+            <div className="mb-6 md:mb-0 min-w-fit mr-12">
               <a
                 href="https://clearhealth.care/"
                 className="flex items-center "
