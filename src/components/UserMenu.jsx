@@ -9,7 +9,6 @@ import profile from "../assets/images/profile.png";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import PricingCatalog from "./PricingCatalog";
 import "../styles/viewer.css";
 
 const Menu = ({ onProfileClick, onUpgradeClick }) => {
@@ -26,13 +25,6 @@ const Menu = ({ onProfileClick, onUpgradeClick }) => {
   };
   const toggleMenu = () => {
     setIsMenuOpen((prevState) => !prevState);
-  };
-
-  const handleSignOut = () => {
-    setIsMenuOpen(false);
-    signOut(() => {
-      router.push("/");
-    });
   };
 
   useEffect(() => {
@@ -131,7 +123,7 @@ const Menu = ({ onProfileClick, onUpgradeClick }) => {
             style={{ marginLeft: "auto", marginRight: "auto" }}
           />
           <button
-            onClick={handleSignOut}
+            onClick={() => signOut({ redirectUrl: "/" })}
             onBlur={closeMenu}
             className="user-item flex flex-row centre items-center"
           >
