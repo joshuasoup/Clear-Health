@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useRef, useEffect } from "react";
 import { useUser, useClerk, UserButton } from "@clerk/clerk-react";
 import "../styles/menu.css";
