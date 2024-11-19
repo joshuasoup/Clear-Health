@@ -1,6 +1,5 @@
 "use client";
 import Navbar from "../components/NavBar";
-import { SignOutButton } from "@clerk/nextjs";
 import "../styles/globals.css";
 import { motion, useAnimation } from "framer-motion";
 import Link from "next/link";

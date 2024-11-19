@@ -109,7 +109,7 @@ const Footer = () => {
             <div className="flex mt-4 sm:justify-center sm:mt-0">
               <a
                 href="https://github.com/joshuasoup"
-                className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5 content-center"
+                className="text-gray-500 hover:text-white dark:hover:text-white ms-5 content-center"
               >
                 <svg
                   className="w-4 h-4"
@@ -129,7 +129,7 @@ const Footer = () => {
               <a
                 href="https://www.linkedin.com/in/joshua-souphanthong"
                 target="_blank"
-                className="text-gray-500 hover:text-gray-900 ms-5"
+                className="text-gray-500 hover:text-white ms-5"
               >
                 <i className="fab fa-linkedin-in"></i>
                 <span className="sr-only">LinkedIn account</span>
