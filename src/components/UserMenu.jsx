@@ -56,7 +56,7 @@ const Menu = ({ onProfileClick, onUpgradeClick }) => {
 
   const signOutUser = () => {
     console.log("About to signout");
-    signOut({ redirectUrl: "https://clearhealth.care/" });
+    signOut({ redirectUrl: "/" });
   };
 
   useEffect(() => {
