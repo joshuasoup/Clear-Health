@@ -54,6 +54,11 @@ const Menu = ({ onProfileClick, onUpgradeClick }) => {
     }
   };
 
+  const signOutUser = () => {
+    console.log("About to signout");
+    signOut({ redirectUrl: "https://clearhealth.care/" });
+  };
+
   useEffect(() => {
     if (isMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
@@ -124,7 +129,7 @@ const Menu = ({ onProfileClick, onUpgradeClick }) => {
             style={{ marginLeft: "auto", marginRight: "auto" }}
           />
           <button
-            onClick={() => signOut({ redirectUrl: "/" })}
+            onClick={signOutUser}
             onBlur={closeMenu}
             className="user-item flex flex-row centre items-center"
           >
