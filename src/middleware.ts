@@ -3,14 +3,8 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)' , '/', '/about', '/contact', '/privacy', '/terms-of-use', '/pricing' , '/roadmap', '/api/webhooks/(.*)', '/assets/(.*)', '/api/reset-token'])
 
 export default clerkMiddleware(async (auth, request) => {
-  try{
-    if (!isPublicRoute(request)) {
-      await auth.protect()
-    }
-  } catch (error) {
-    console.error('Error in middleware:', error);
-    // Optionally, return a custom response
-    return new Response('Not Found', { status: 404 });
+  if (!isPublicRoute(request)) {
+    await auth.protect()
   }
 })
 

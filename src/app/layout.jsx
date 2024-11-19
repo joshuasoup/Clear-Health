@@ -14,7 +14,7 @@ export const metadata = {
 
 const RootLayout = ({ children }) => {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl={"https://clearhealth.care/"}>
       <TokenProvider>
         <html lang="en">
           <body>
