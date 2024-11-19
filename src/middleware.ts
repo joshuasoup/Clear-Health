@@ -1,12 +1,34 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)' , '/', '/about', '/contact', '/', '/terms-of-use', '/pricing' , '/roadmap', '/api/webhooks/(.*)', '/assets/(.*)', '/api/reset-token'])
+const isPublicRoute = createRouteMatcher([
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+  '/',
+  '/about',
+  '/contact',
+  '/privacy',
+  '/terms-of-use',
+  '/pricing',
+  '/roadmap',
+  '/api/webhooks/(.*)',
+  '/assets/(.*)',
+  '/api/reset-token',
+]);
 
 export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
-    await auth.protect()
+  try {
+    if (!isPublicRoute(request)) {
+      // Protect the route and return the response
+      await auth.protect();
+    } 
+  } catch (error) {
+    // Log the error to the console
+    console.error('Error in middleware:', error);
+    // Redirect the user to the homepage
+    return NextResponse.redirect(new URL('/', request.url));
   }
-})
+});
 
 export const config = {
   matcher: [
@@ -15,4 +37,4 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
-}
+};
