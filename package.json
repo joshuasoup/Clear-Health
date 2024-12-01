@@ -51,7 +51,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-intersection-observer": "^9.13.1",
-    "react-pdf": "^7.7.1",
+    "react-pdf": "^9.1.1",
     "sharp": "^0.33.4",
     "stripe": "^14.25.0",
     "svix": "^1.40.0",
