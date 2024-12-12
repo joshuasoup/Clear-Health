@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 import { OpenAIStream, StreamingTextResponse, Message } from 'ai';
-import { getContext } from '../../lib/pinecone/context';
+import { getContext } from '../../../lib/pinecone/context';
 
 // Create an OpenAI API client (edge-friendly)
 const openai = new OpenAI({
@@ -10,21 +10,28 @@ const openai = new OpenAI({
 // Set the runtime to edge
 export const runtime = 'edge';
 
-async function handler(req: Request) {
-  if (req.method !== "POST") {
-    return new Response(null, { status: 405 }); // Method Not Allowed for non-POST requests
-  }
+export async function POST(req: Request) {
+  try {
+    // Parse the JSON body to extract the messages
+    const { messages, fileKey } = await req.json();
 
-  // Parse the JSON body to extract the messages
-  const { messages, fileKey } = await req.json();
-  const lastMessage = messages[messages.length - 1];
-  const context = await getContext(lastMessage.content, fileKey);
-  console.log(context)
+    if (!messages || !fileKey) {
+      return new Response(
+        JSON.stringify({ error: "Missing messages or fileKey in request body" }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
-  const prompt = {
+    // Get context using the last message content and the fileKey
+    const lastMessage = messages[messages.length - 1];
+    const context = await getContext(lastMessage.content, fileKey);
+
+
+    // Define the system prompt
+    const prompt = {
       role: "system",
       content: `You are a friendly and knowledgeable AI assistant that helps summarize medical reports in simple, everyday language. Your task is to explain medical information in a way that is clear and easy for anyone to understand, especially high school students or people who don’t know a lot about medicine.
-  
+      
       When explaining medical terms or conditions, always break them down into simple ideas and avoid complicated words. If there’s no simpler word, explain it like you would to a friend. Be friendly, kind, and always helpful. Your goal is to make the person feel comfortable and informed, without overwhelming them with too much detail.
 
       AI traits:
@@ -37,29 +44,37 @@ async function handler(req: Request) {
       For example, if the medical report says something complex like "marked hydronephrosis and hydroureter," explain it like this: 
       "This means there’s some swelling in the kidney and the tube that carries urine to the bladder. It’s like when a hose gets a little backed up, so the water can’t flow as easily."
       
-      When summarizing reports, focus on the big picture and what it means in simple terms
+      When summarizing reports, focus on the big picture and what it means in simple terms.
+      
       START CONTEXT BLOCK 
       ${context}
       END OF CONTEXT BLOCK
+      
       AI assistant will take into account any CONTEXT BLOCK that is provided in a conversation.
-      If the context does not provide the answer to question, the AI assistant will say, "I'm sorry, but I don't know the answer to that question".
-      AI assistant will not apologize for previous responses, but instead will indicated new information was gained.
+      If the context does not provide the answer to the question, the AI assistant will say, "I'm sorry, but I don't know the answer to that question".
+      AI assistant will not apologize for previous responses but instead will indicate new information was gained.
       `,
     };
 
-  // Request a streaming chat completion from OpenAI
-  const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
-    stream: true,
-    messages: [
-      prompt,
-      ...messages.filter((message: Message) => message.role === "user"),
+    // Request a streaming chat completion from OpenAI
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      stream: true,
+      messages: [
+        prompt,
+        ...messages.filter((message: Message) => message.role === "user"),
+      ],
+    });
 
-    ]
-  });
-  // Stream the response
-  const stream = OpenAIStream(response);
-  return new StreamingTextResponse(stream);
+    // Stream the response
+    const stream = OpenAIStream(response);
+    return new StreamingTextResponse(stream);
+  } catch (error) {
+    console.error("Error in POST /openai-free-connection:", error);
+
+    return new Response(
+      JSON.stringify({ error: "Failed to process the request" }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 }
-
-export default handler;

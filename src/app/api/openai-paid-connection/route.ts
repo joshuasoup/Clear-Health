@@ -9,10 +9,7 @@ const openai = new OpenAI({
 // Set the runtime to edge
 export const runtime = 'edge';
 
-async function handler(req: Request) {
-  if (req.method !== "POST") {
-    return new Response(null, { status: 405 }); // Method Not Allowed for non-POST requests
-  }
+export default async function POST(req: Request) {
 
   // Parse the JSON body to extract the messages
   const { messages } = await req.json();
@@ -36,5 +33,3 @@ async function handler(req: Request) {
   const stream = OpenAIStream(response);
   return new StreamingTextResponse(stream);
 }
-
-export default handler;

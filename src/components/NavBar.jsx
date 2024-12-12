@@ -49,7 +49,7 @@ const Navbar = () => {
                 Log In
               </h1>
             </Link>
-            <Link href="/pdf-viewer">
+            <Link href={user ? "/pdf-viewer" : "/sign-in"}>
               <h1
                 className="special-button"
                 style={{ fontWeight: "599", letterSpacing: ".7px" }}

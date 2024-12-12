@@ -11,7 +11,6 @@ import medicalLogo from "../../assets/images/clearhealthlogo.png";
 import PricingCatalog from "../../components/PricingCatalog";
 import { motion } from "framer-motion";
 import sidebar from "../../assets/images/1.png";
-import ChatComponent from "../../components/ChatComponent";
 import pencil from "../../assets/images/pencil.png";
 import DeleteButton from "../../components/DeleteButton";
 import TokenProgressBar from "../../components/TokenProgressBar";
@@ -22,6 +21,10 @@ import { UserProfile } from "@clerk/nextjs";
 import message from "../../assets/images/chatsymbol.png";
 
 const PDFLoader = dynamic(() => import("../../components/PDFLoader"), {
+  ssr: false,
+});
+
+const ChatComponent = dynamic(() => import("../../components/ChatComponent"), {
   ssr: false,
 });
 
@@ -315,7 +318,8 @@ export default function Viewer() {
                         .reverse()
                         .map((obj) => (
                           <div
-                            className={`group relative flex justify-between items-center w-full overflow-hidden rounded-md ${
+                            key={obj.key}
+                            className={`group relative flex justify-between items-center w-full overflow-hidden rounded-md mb-0.5 ${
                               activeItemKey === obj.key
                                 ? "bg-hover"
                                 : "hover:bg-hover"
@@ -424,6 +428,7 @@ export default function Viewer() {
                   <Image
                     src={message}
                     width={18}
+                    height={18}
                     className="mr-2"
                     alt="Chat Button"
                   />

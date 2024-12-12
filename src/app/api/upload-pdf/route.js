@@ -1,7 +1,7 @@
-import s3Client from "../../lib/aws/db";
+import s3Client from "../../../lib/aws/db";
 import { getAuth } from "@clerk/nextjs/server";
 import { IncomingForm } from "formidable";
-import clientPromise from "../../lib/mongo/db";
+import clientPromise from "../../../lib/mongo/db";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
 
@@ -31,7 +31,7 @@ async function uploadFileToS3(file) {
   }
 }
 
-export default async function handler(req, res) {
+export async function POST(req) {
   const { userId } = getAuth(req);
   const client = await clientPromise;
   const database = client.db("userdata");
@@ -42,13 +42,15 @@ export default async function handler(req, res) {
   const pdfCount = user.pdfs ? user.pdfs.length : 0;
 
   if (subscriptionStatus === false && pdfCount >= 2) {
-    return res
-      .status(403)
-      .json({ error: "Upload limit reached or inactive subscription" });
+    return new Response(
+      JSON.stringify({
+        error: "Upload limit reached or inactive subscription",
+      }),
+      { status: 403, headers: { "Content-Type": "application/json" } }
+    );
   }
 
   const form = new IncomingForm({ keepExtensions: true });
-  console.log(pdfCount);
   const parseForm = () =>
     new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
@@ -61,7 +63,10 @@ export default async function handler(req, res) {
     const { fields, files } = await parseForm();
     const pdfFile = files.file;
     if (!pdfFile) {
-      return res.status(400).json({ error: "No PDF file uploaded" });
+      return new Response(JSON.stringify({ error: "No PDF file uploaded" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Step 1: Upload the file to S3 and get the key
@@ -73,21 +78,26 @@ export default async function handler(req, res) {
     };
 
     // Step 2: Update MongoDB with the metadata including the S3 key
-
     await usersCollection.updateOne(
       { clerkUserId: userId },
       { $push: { pdfs: pdfMetadata } },
       { upsert: true }
     );
 
-    res.status(200).json({
-      message: "PDF uploaded and metadata added successfully",
-      userId: userId,
-      fileKey,
-      fileName: pdfFile[0].originalFilename,
-    });
+    return new Response(
+      JSON.stringify({
+        message: "PDF uploaded and metadata added successfully",
+        userId: userId,
+        fileKey,
+        fileName: pdfFile[0].originalFilename,
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
   } catch (e) {
     console.error("Server error:", e);
-    res.status(500).json({ error: "Failed to upload PDF" });
+    return new Response(JSON.stringify({ error: "Failed to upload PDF" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
