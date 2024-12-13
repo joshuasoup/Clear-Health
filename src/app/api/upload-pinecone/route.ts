@@ -72,17 +72,11 @@ async function embedDocuments(documents) {
 
 export async function POST(req) {
   try {
-    // Log detailed request information
-    console.log('Request Method:', req.method);
-    console.log('Request URL:', req.url);
-    console.log('Request Headers:', Object.fromEntries(req.headers));
 
     // Use NextRequest's json() method
     const body = await req.json();
-    console.log('Parsed Body:', body);
 
     const fileKey = body?.fileKey;
-    console.log('Extracted FileKey:', fileKey);
 
     if (!fileKey) {
       console.error('No fileKey found in request body');

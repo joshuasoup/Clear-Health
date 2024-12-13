@@ -50,7 +50,8 @@ export async function POST(req) {
               $set: {
                 subscriptionId: session.subscription,
                 subscriptionStatus: true,
-                subscriptionPlan: session.metadata.plan, // Example metadata for tracking plan
+                subscriptionPlan: session.metadata.plan,
+                maxTokens: 100000, // Example metadata for tracking plan
               },
             }
           );

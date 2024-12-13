@@ -32,9 +32,15 @@ export async function POST(req) {
       { $pull: { pdfs: { key: key } } }
     );
 
+    // Delete the vector from Pinecone
     const pineconeClient = getPineconeClient();
-    const pineconeIndex = await pineconeClient.index("clearhealth");
-    await pineconeIndex.delete({ ids: [key] });
+
+    const pineconeIndex = pineconeClient.Index(
+      "clearhealth",
+      "https://clearhealth-zuxt9ok.svc.aped-4627-b74a.pinecone.io"
+    );
+
+    await pineconeIndex.namespace(`${key}`).deleteAll();
 
     return new Response(
       JSON.stringify({ message: "File deleted successfully" }),
