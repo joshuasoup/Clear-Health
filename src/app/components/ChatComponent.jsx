@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { useChat } from "ai/react";
-import RightArrow from "../assets/images/1.png";
-import RefreshLogo from "../assets/images/3.png";
+import RightArrow from "../../assets/images/1.png";
+import RefreshLogo from "../../assets/images/3.png";
 import Image from "next/image";
-import defaultavatar from "../assets/images/avatar.png";
-import "../styles/chat.css";
-import logo from "../assets/images/clearhealthlogo.png";
+import defaultavatar from "../../assets/images/avatar.png";
+import "../../styles/chat.css";
+import logo from "../../assets/images/clearhealthlogo.png";
 
 export default function ChatComponent({ callhandleClick, fileKey }) {
   const { messages, input, handleInputChange, handleSubmit, setMessages } =

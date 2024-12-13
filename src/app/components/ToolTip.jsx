@@ -1,12 +1,12 @@
 // components/ToolTip.js
 import React, { useState, useEffect, forwardRef, useRef } from "react";
-import "../styles/tooltip.css";
+import "../../styles/tooltip.css";
 import DOMPurify from "dompurify";
 import parse from "html-react-parser";
-import { useToken } from "../contexts/TokenContext";
+import { useToken } from "../../contexts/TokenContext";
 import { motion } from "framer-motion";
-import glass from "../assets/images/magnifyingglass.png";
-import bulb from "../assets/images/secondbulb.png";
+import glass from "../../assets/images/magnifyingglass.png";
+import bulb from "../../assets/images/secondbulb.png";
 import Image from "next/image";
 
 const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {

@@ -1,10 +1,10 @@
 "use client";
-import Navbar from "../components/NavBar";
+import Navbar from "./components/NavBar";
 import "../styles/globals.css";
 import { motion, useAnimation } from "framer-motion";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
-import Footer from "../components/Footer";
+import Footer from "./components/Footer";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 

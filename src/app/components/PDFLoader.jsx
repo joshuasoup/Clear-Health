@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import Image from "next/image";
-import RightArrow from "../assets/images/1.png";
-import LeftArrow from "../assets/images/2.png";
-import medicalLogo from "../assets/images/clearhealthlogo.png";
-import "../../node_modules/react-pdf/dist/esm/Page/TextLayer.css";
-import "../../node_modules/react-pdf/dist/esm/Page/AnnotationLayer.css";
-import "../styles/globals.css";
+import RightArrow from "../../assets/images/1.png";
+import LeftArrow from "../../assets/images/2.png";
+import medicalLogo from "../../assets/images/clearhealthlogo.png";
+import "../../../node_modules/react-pdf/dist/esm/Page/TextLayer.css";
+import "../../../node_modules/react-pdf/dist/esm/Page/AnnotationLayer.css";
+import "../../styles/globals.css";
 import ToolTip from "./ToolTip";
 import { motion } from "framer-motion";
 import UpgradeModal from "./UpgradeModal";

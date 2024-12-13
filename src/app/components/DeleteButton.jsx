@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import garbagecan from "../assets/images/garbagecan.png";
-import warningIcon from "../assets/images/warning.png";
+import garbagecan from "../../assets/images/garbagecan.png";
+import warningIcon from "../../assets/images/warning.png";
 import { motion } from "framer-motion";
 import LoadingSpinner from "./LoadingSpinner";
 

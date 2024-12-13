@@ -8,7 +8,9 @@ export async function GET(req) {
     const database = client.db("userdata");
     const usersCollection = database.collection("Users");
 
-    const user = await usersCollection.findOne({ clerkUserId: userId });
+    const user = await usersCollection.findOne({
+      clerkUserId: userId,
+    });
 
     if (!user) {
       return new Response(JSON.stringify({ error: "User not found" }), {

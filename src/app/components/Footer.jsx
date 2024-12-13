@@ -1,6 +1,6 @@
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import "../styles/footer.css";
-import Logo from "../assets/images/clearhealthlogo.png";
+import "../../styles/footer.css";
+import Logo from "../../assets/images/clearhealthlogo.png";
 import Image from "next/image";
 
 const Footer = () => {

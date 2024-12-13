@@ -1,16 +1,16 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { useUser, useClerk, UserButton } from "@clerk/clerk-react";
-import "../styles/menu.css";
-import "../styles/globals.css";
-import defaultAvatar from "../assets/images/defaultAvatar.png"; // Assuming you have a default avatar
-import glasses from "../assets/images/glasses.png";
-import exit from "../assets/images/signout.png";
-import profile from "../assets/images/profile.png";
+import "../../styles/menu.css";
+import "../../styles/globals.css";
+import defaultAvatar from "../../assets/images/defaultAvatar.png"; // Assuming you have a default avatar
+import glasses from "../../assets/images/glasses.png";
+import exit from "../../assets/images/signout.png";
+import profile from "../../assets/images/profile.png";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import "../styles/viewer.css";
+import "../../styles/viewer.css";
 
 const Menu = ({ onProfileClick, onUpgradeClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import "../styles/globals.css";
-import "../styles/viewer.css";
+import "../../styles/globals.css";
+import "../../styles/viewer.css";
 import Image from "next/image";
-import plus from "../assets/images/plus.png";
-import pdfIcon from "../assets/images/pdf-icon.png";
+import plus from "../../assets/images/plus.png";
+import pdfIcon from "../../assets/images/pdf-icon.png";
 import LoadingSpinner from "./LoadingSpinner";
 import UpgradeModal from "./UpgradeModal";
 

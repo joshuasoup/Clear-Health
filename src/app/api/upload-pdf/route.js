@@ -37,12 +37,11 @@ export async function POST(req) {
   const client = await clientPromise;
   const database = client.db("userdata");
   const usersCollection = database.collection("Users");
-
   const user = await usersCollection.findOne({ clerkUserId: userId });
   const subscriptionStatus = user.subscriptionStatus;
   const pdfCount = user.pdfs ? user.pdfs.length : 0;
 
-  if (subscriptionStatus === false && pdfCount >= 2) {
+  if (subscriptionStatus === false && pdfCount >= 5) {
     return new Response(
       JSON.stringify({
         error: "Upload limit reached or inactive subscription",

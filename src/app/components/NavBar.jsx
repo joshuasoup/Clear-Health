@@ -2,9 +2,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import medicalLogo from "../assets/images/clearhealthlogo.png";
+import medicalLogo from "../../assets/images/clearhealthlogo.png";
 import { useUser } from "@clerk/clerk-react";
-import "../styles/globals.css";
+import "../../styles/globals.css";
 
 const Navbar = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);

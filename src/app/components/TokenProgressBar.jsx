@@ -1,6 +1,6 @@
 "use client";
-import "../styles/token-bar.css";
-import { useToken } from "../contexts/TokenContext";
+import "../../styles/token-bar.css";
+import { useToken } from "../../contexts/TokenContext";
 import { Tooltip } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 

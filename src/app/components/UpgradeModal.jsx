@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import glasses from "../assets/images/glasses.png";
+import glasses from "../../assets/images/glasses.png";
 import { motion } from "framer-motion";
 
 const Modal = ({ showModal, setShowModal, openUpgradeModal }) => {

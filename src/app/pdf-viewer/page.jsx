@@ -1,30 +1,32 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import UploadButton from "../../components/UploadButton";
+import UploadButton from "../components/UploadButton";
 import dynamic from "next/dynamic";
 import "../../styles/globals.css";
 import "../../styles/viewer.css";
-import UserMenu from "../../components/UserMenu";
+import UserMenu from "../components/UserMenu";
 import Link from "next/link";
 import Image from "next/image";
 import medicalLogo from "../../assets/images/clearhealthlogo.png";
-import PricingCatalog from "../../components/PricingCatalog";
+import PricingCatalog from "../components/PricingCatalog";
 import { motion } from "framer-motion";
 import sidebar from "../../assets/images/1.png";
 import pencil from "../../assets/images/pencil.png";
-import DeleteButton from "../../components/DeleteButton";
-import TokenProgressBar from "../../components/TokenProgressBar";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import DeleteButton from "../components/DeleteButton";
+import TokenProgressBar from "../components/TokenProgressBar";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { UserProfile } from "@clerk/nextjs";
 import message from "../../assets/images/chatsymbol.png";
+import { Zap } from "lucide-react";
+import { Button } from "../components/ui/button";
 
-const PDFLoader = dynamic(() => import("../../components/PDFLoader"), {
+const PDFLoader = dynamic(() => import("../components/PDFLoader"), {
   ssr: false,
 });
 
-const ChatComponent = dynamic(() => import("../../components/ChatComponent"), {
+const ChatComponent = dynamic(() => import("../components/ChatComponent"), {
   ssr: false,
 });
 
@@ -32,6 +34,7 @@ const checkSubscriptionStatus = async () => {
   try {
     const response = await fetch("/api/check-subscription");
     const data = await response.json();
+    console.log(data.active);
     return data.active;
   } catch (error) {
     console.error("Error checking subscription status:", error);
@@ -69,13 +72,13 @@ export default function Viewer() {
 
   async function fetchPDFs() {
     try {
-      const selectedTitle = title;
       setSelectedTitle("Loading...");
       const response = await fetch("/api/get-pdf");
       if (!response.ok) throw new Error("Network response was not ok.");
       const data = await response.json();
       setPDFs(data.userCollection);
-      setIsSubscribed(checkSubscriptionStatus);
+      const subscriptionStatus = await checkSubscriptionStatus();
+      setIsSubscribed(subscriptionStatus);
     } catch (error) {
       setError(error.message);
     }
@@ -415,19 +418,30 @@ export default function Viewer() {
             <h1>{title}</h1>
             <div className="flex">
               {!showComponent && (
-                <button
-                  className="button text-gray-500 mr-0 font-semibold flex flex-row items-center"
-                  onClick={openChat}
-                >
-                  <Image
-                    src={message}
-                    width={18}
-                    height={18}
-                    className="mr-2"
-                    alt="Chat Button"
-                  />
-                  Chat
-                </button>
+                <div className="flex-row flex ">
+                  {!isSubscribed && (
+                    <Button
+                      className=" special-button bg-red mr-3 shadow-xl font-medium hover:bg-rose-600 font-inter tracking-wider"
+                      onClick={toggleUpgradeModal}
+                    >
+                      <Zap className=" h-4 w-4" /> Upgrade to Unlimited
+                    </Button>
+                  )}
+
+                  <button
+                    className="button text-gray-500 mr-0 font-semibold flex flex-row items-center"
+                    onClick={openChat}
+                  >
+                    <Image
+                      src={message}
+                      width={18}
+                      height={18}
+                      className="mr-2"
+                      alt="Chat Button"
+                    />
+                    Chat
+                  </button>
+                </div>
               )}
 
               <button className="text-white ml-0">
