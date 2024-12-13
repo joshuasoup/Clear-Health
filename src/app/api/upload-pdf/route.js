@@ -4,6 +4,7 @@ import { IncomingForm } from "formidable";
 import clientPromise from "../../../lib/mongo/db";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
+import { Readable } from "stream";
 
 export const config = {
   api: {
@@ -12,7 +13,7 @@ export const config = {
 };
 
 async function uploadFileToS3(file) {
-  const fileContent = fs.readFileSync(file[0].filepath);
+  const fileContent = await file.arrayBuffer();
   const { v4: uuidv4 } = require("uuid");
   const key = `${uuidv4()}`; // Ensure this is unique if necessary
 
@@ -50,18 +51,9 @@ export async function POST(req) {
     );
   }
 
-  const form = new IncomingForm({ keepExtensions: true });
-  const parseForm = () =>
-    new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-        if (err) reject(err);
-        else resolve({ fields, files });
-      });
-    });
-
   try {
-    const { fields, files } = await parseForm();
-    const pdfFile = files.file;
+    const formData = await req.formData();
+    const pdfFile = formData.get("file");
     if (!pdfFile) {
       return new Response(JSON.stringify({ error: "No PDF file uploaded" }), {
         status: 400,
@@ -73,7 +65,7 @@ export async function POST(req) {
     const fileKey = await uploadFileToS3(pdfFile);
 
     const pdfMetadata = {
-      name: pdfFile[0].originalFilename,
+      name: pdfFile.name,
       key: fileKey, // Store the S3 key instead of the URL
     };
 
@@ -89,7 +81,7 @@ export async function POST(req) {
         message: "PDF uploaded and metadata added successfully",
         userId: userId,
         fileKey,
-        fileName: pdfFile[0].originalFilename,
+        fileName: pdfFile.name,
       }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );

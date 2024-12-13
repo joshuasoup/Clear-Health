@@ -1,27 +1,38 @@
+import { getAuth } from "@clerk/nextjs/server";
+import clientPromise from "../../../lib/mongo/db";
+
 export async function GET(req) {
   try {
-    // Example data for the response
-    const tokenUsage = {
-      usedTokens: 100,
-      maxTokens: 500,
-    };
+    const { userId } = getAuth(req);
+    const client = await clientPromise;
+    const database = client.db("userdata");
+    const usersCollection = database.collection("Users");
 
-    // Return JSON response with appropriate headers
-    return new Response(JSON.stringify(tokenUsage), {
+    const user = await usersCollection.findOne({ clerkUserId: userId });
+
+    if (!user) {
+      return new Response(JSON.stringify({ error: "User not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Check if the 'tokensUsed' field exists, otherwise set it to 0
+    const usedTokens = user.tokensUsed !== undefined ? user.tokensUsed : 0;
+    const maxTokens = user.maxTokens !== undefined ? user.maxTokens : 0;
+
+    return new Response(JSON.stringify({ usedTokens, maxTokens }), {
       status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error fetching token usage:", error);
+    console.error("Server error:", error);
+
     return new Response(
       JSON.stringify({ error: "Failed to fetch token usage" }),
       {
         status: 500,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       }
     );
   }

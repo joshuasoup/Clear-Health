@@ -4,6 +4,7 @@ const nextConfig = {
   images: {
     domains: ["img.clerk.com"],
   },
+  serverExternalPackages: ["pdf-parse"],
 };
 
 module.exports = nextConfig;

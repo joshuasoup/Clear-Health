@@ -1,10 +1,18 @@
 import { downloadFromS3 } from "../../../lib/pinecone/s3-server";
 import { getEmbeddings } from "../../../lib/pinecone/embeddings";
 import { getPineconeClient } from "../../../lib/pinecone/pinecone";
-import pdfParse from "pdf-parse";
+import pdfParse from 'pdf-parse/lib/pdf-parse'
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import md5 from "md5";
 import { convertToAscii } from "../../../lib/pinecone/utils";
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+
 
 type DocumentType = {
   pageContent: string;
@@ -64,57 +72,103 @@ async function embedDocuments(documents) {
 
 export async function POST(req) {
   try {
-    const { fileKey } = await req.json(); // Parse JSON body
+    // Log detailed request information
+    console.log('Request Method:', req.method);
+    console.log('Request URL:', req.url);
+    console.log('Request Headers:', Object.fromEntries(req.headers));
+
+    // Use NextRequest's json() method
+    const body = await req.json();
+    console.log('Parsed Body:', body);
+
+    const fileKey = body?.fileKey;
+    console.log('Extracted FileKey:', fileKey);
 
     if (!fileKey) {
+      console.error('No fileKey found in request body');
       return new Response(
         JSON.stringify({ error: "Missing fileKey in the request body" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    // Step 1: Download PDF from S3
-    console.log("Downloading PDF from S3...");
-    console.log(fileKey);
+    // Detailed S3 download logging
+    console.log("Attempting to download PDF from S3...");
     const fileBuffer = await downloadFromS3(fileKey);
+    
     if (!fileBuffer) {
+      console.error('Failed to download file buffer');
       throw new Error("Failed to download PDF");
     }
 
-    // Step 2: Load PDF content
-    const loader = await pdfParse(fileBuffer);
+    console.log('File Buffer Details:', {
+      type: typeof fileBuffer,
+      length: fileBuffer.length,
+      isBuffer: Buffer.isBuffer(fileBuffer)
+    });
 
-    // Step 3: Process and split PDF into smaller chunks
-    const documents = await processAndSplitPDF(loader.text);
+    // Detailed PDF parsing
+    try {
+      const loader = await pdfParse(fileBuffer, {
+        max: 1 // Limit to first page for testing
+      });
 
-    // Step 4: Embed the documents
-    const vectors = await embedDocuments(documents);
+      console.log('PDF Parse Result:', {
+        textLength: loader.text ? loader.text.length : 0,
+        numPages: loader.numpages,
+        numRender: loader.numrender
+      });
 
-    // Step 5: Upload to Pinecone
-    const pineconeClient = getPineconeClient();
-    const pineconeIndex = await pineconeClient.index("clearhealth");
-    const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
-    await namespace.upsert(vectors);
+      // Proceed with embedding and Pinecone upload
+      const documents = await processAndSplitPDF(loader.text);
+      const vectors = await embedDocuments(documents);
 
-    return new Response(
-      JSON.stringify({
-        message: "Successfully loaded into Pinecone",
-        result: vectors,
-      }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+      const pineconeClient = getPineconeClient();
+      const pineconeIndex = await pineconeClient.index("clearhealth");
+      const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
+      await namespace.upsert(vectors);
+
+      return new Response(
+        JSON.stringify({
+          message: "Successfully loaded into Pinecone",
+          result: vectors,
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+
+    } catch (parseError) {
+      console.error('PDF Parsing Specific Error:', {
+        name: parseError.name,
+        message: parseError.message,
+        stack: parseError.stack
+      });
+
+      return new Response(
+        JSON.stringify({ 
+          error: "PDF parsing failed",
+          errorDetails: parseError.message
+        }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Overall Route Processing Error:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
+
     return new Response(
-      JSON.stringify({ error: "Failed to process and upload PDF" }),
+      JSON.stringify({ 
+        error: "Failed to process and upload PDF",
+        errorDetails: error.message
+      }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 }
 
-export async function OPTIONS() {
-  return new Response(null, {
-    status: 204,
-    headers: { Allow: "POST, OPTIONS" },
-  });
-}
+
+
+

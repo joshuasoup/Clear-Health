@@ -111,6 +111,7 @@ const UploadButton = (props) => {
   const handleCloseModal = () => {
     setIsModalVisible(false);
     setSelectedFile(null);
+    setIsUploading(false);
   };
 
   const handleRemoveFile = () => {

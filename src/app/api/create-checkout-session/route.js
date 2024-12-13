@@ -25,7 +25,6 @@ export async function POST(req) {
         headers: { "Content-Type": "application/json" },
       });
     }
-    console.log("LOL");
     console.log(userId);
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],

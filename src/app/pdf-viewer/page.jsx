@@ -28,21 +28,14 @@ const ChatComponent = dynamic(() => import("../../components/ChatComponent"), {
   ssr: false,
 });
 
-const checkSubscriptionStatus = async (userId) => {
-  const user = await subscriptions.findOne({ clerkUserId: userId });
-
-  if (!user || !user.subscription) {
-    return { active: false };
-  }
-
-  const now = new Date();
-  if (
-    user.subscription.status === "active" &&
-    user.subscription.currentPeriodEnd > now
-  ) {
-    return { active: true };
-  } else {
-    return { active: false };
+const checkSubscriptionStatus = async () => {
+  try {
+    const response = await fetch("/api/check-subscription");
+    const data = await response.json();
+    return data.active;
+  } catch (error) {
+    console.error("Error checking subscription status:", error);
+    return false;
   }
 };
 
@@ -74,18 +67,20 @@ export default function Viewer() {
     }
   }, [showComponent]);
 
-  useEffect(() => {
-    async function fetchPDFs() {
-      try {
-        setSelectedTitle("Loading...");
-        const response = await fetch("/api/get-pdf");
-        if (!response.ok) throw new Error("Network response was not ok.");
-        const data = await response.json();
-        setPDFs(data.userCollection);
-      } catch (error) {
-        setError(error.message);
-      }
+  async function fetchPDFs() {
+    try {
+      const selectedTitle = title;
+      setSelectedTitle("Loading...");
+      const response = await fetch("/api/get-pdf");
+      if (!response.ok) throw new Error("Network response was not ok.");
+      const data = await response.json();
+      setPDFs(data.userCollection);
+      setIsSubscribed(checkSubscriptionStatus);
+    } catch (error) {
+      setError(error.message);
     }
+  }
+  useEffect(() => {
     fetchPDFs();
   }, [submissionCount]);
 
@@ -134,9 +129,8 @@ export default function Viewer() {
       const data = await response.json();
     } catch (error) {
       console.error("Error:", error);
-      alert(`Error: ${error.message}`); // Provide user feedback
     } finally {
-      setSubmissionCount(submissionCount + 1);
+      fetchPDFs();
       setSelectedTitle(newName);
       setRenamingKey(null); // Reset renamingKey to exit renaming mode regardless of outcome
     }

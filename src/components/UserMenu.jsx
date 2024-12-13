@@ -14,6 +14,7 @@ import "../styles/viewer.css";
 
 const Menu = ({ onProfileClick, onUpgradeClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
   const { user } = useUser();
   const { signOut } = useClerk();
   const router = useRouter();
@@ -31,6 +32,22 @@ const Menu = ({ onProfileClick, onUpgradeClick }) => {
   useEffect(() => {
     if (isMenuOpen && menuRef.current) {
       menuRef.current.focus(); // Focus on the menu div when it's open
+    }
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    const fetchSubscriptionStatus = async () => {
+      try {
+        const response = await fetch("/api/check-subscription");
+        const data = await response.json();
+        setSubscriptionStatus(data.active);
+      } catch (error) {
+        console.error("Error checking subscription status:", error);
+      }
+    };
+
+    if (isMenuOpen) {
+      fetchSubscriptionStatus();
     }
   }, [isMenuOpen]);
 
@@ -95,20 +112,22 @@ const Menu = ({ onProfileClick, onUpgradeClick }) => {
           ref={menuRef}
           tabIndex="1"
         >
-          <button
-            className="user-item flex flex-row items-center"
-            onClick={handleUpgradeClick}
-            onBlur={closeMenu} // Close the modal when focus is lost
-          >
-            <Image
-              src={glasses}
-              width={24}
-              height={24}
-              className="mr-2"
-              alt="Upgrade"
-            />
-            Upgrade
-          </button>
+          {subscriptionStatus === false && (
+            <button
+              className="user-item flex flex-row items-center"
+              onClick={handleUpgradeClick}
+              onBlur={closeMenu} // Close the modal when focus is lost
+            >
+              <Image
+                src={glasses}
+                width={24}
+                height={24}
+                className="mr-2"
+                alt="Upgrade"
+              />
+              Upgrade
+            </button>
+          )}
           {/* Use the onProfileClick prop passed from the parent */}
           <button
             className="user-item flex flex-row items-center"

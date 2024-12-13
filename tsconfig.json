@@ -30,7 +30,7 @@
     "**/*.ts",
     "**/*.tsx",
     "src/pages/api/openai-free-connection.jsx"
-, "src/pages/api/webhooks/stripe.jsx"  ],
+, "src/pages/api/webhooks/stripe.jsx", "src/app/api/upload-pinecone/route.js"  ],
   "exclude": [
     "node_modules"
   ]
