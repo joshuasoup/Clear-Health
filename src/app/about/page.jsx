@@ -153,10 +153,10 @@ const page = () => {
 
             {/* Text Section */}
             <motion.div
-              className="flex items-center sm:h-64"
+              className="flex items-baseline sm:h-64 flex-col "
               variants={fadeInUp}
             >
-              <p className="text-base sm:text-xl text-gray-900 tracking-tighter font-inter">
+              <p className="text-base sm:text-md md:text-xl text-gray-900 tracking-tighter font-inter">
                 When a close family member was diagnosed with pancreatic cancer,
                 I remember the overwhelming feeling of confusion as I tried to
                 make sense of the initial medical scan. The terms were foreign,
@@ -165,6 +165,24 @@ const page = () => {
                 offering an easy, accessible way to understand their medical
                 reports right from the start.
               </p>
+
+              <div className="mt-6 ">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-gray-900">
+                  Contact Me
+                </h3>
+                <p className="text-sm sm:text-base text-gray-700">
+                  <strong>Email:</strong>{" "}
+                  <a href="mailto:joshua@example.com" className="underline">
+                    joshua@example.com
+                  </a>
+                </p>
+                <p className="text-sm sm:text-base text-gray-700">
+                  <strong>Phone:</strong>{" "}
+                  <a href="tel:+1234567890" className="underline">
+                    +1 (234) 567-890
+                  </a>
+                </p>
+              </div>
             </motion.div>
           </div>
         </motion.section>
