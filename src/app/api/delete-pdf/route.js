@@ -2,6 +2,7 @@ import s3Client from "../../../lib/aws/db";
 import clientPromise from "../../../lib/mongo/db";
 import { getAuth } from "@clerk/nextjs/server";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { getPineconeClient } from "../../../lib/pinecone/pinecone";
 
 export async function POST(req) {
   try {
@@ -30,6 +31,10 @@ export async function POST(req) {
       { clerkUserId: userId },
       { $pull: { pdfs: { key: key } } }
     );
+
+    const pineconeClient = getPineconeClient();
+    const pineconeIndex = await pineconeClient.index("clearhealth");
+    await pineconeIndex.delete({ ids: [key] });
 
     return new Response(
       JSON.stringify({ message: "File deleted successfully" }),
