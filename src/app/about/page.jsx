@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import Navbar from "../../components/NavBar";
-import Footer from "../../components/Footer";
+import Navbar from "@components/NavBar";
+import Footer from "@components/Footer";
 import Image from "next/image";
 import { useEffect } from "react";
 

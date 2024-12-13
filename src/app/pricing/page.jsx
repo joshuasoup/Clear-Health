@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import Navbar from "../../components/NavBar";
-import PricingCatalog from "../../components/PricingCatalog";
-import Footer from "../../components/Footer";
+import Navbar from "@components/NavBar";
+import PricingCatalog from "@components/PricingCatalog";
+import Footer from "@components/Footer";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 

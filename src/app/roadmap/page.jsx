@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import Navbar from "../../components/NavBar";
-import Footer from "../../components/Footer";
+import Navbar from "@components/NavBar";
+import Footer from "@components/Footer";
 import { motion } from "framer-motion";
 import { FaRocket, FaLightbulb, FaCogs } from "react-icons/fa";
 import { useEffect } from "react";
