@@ -30,7 +30,7 @@ export async function POST(req) {
       payment_method_types: ["card"],
       line_items: [
         {
-          price: "price_1Q581YRquv3tbGOmCIk9o926", // Your Stripe Price ID
+          price: process.env.STRIPE_PRICE_ID, // Your Stripe Price ID
           quantity: 1,
         },
       ],
