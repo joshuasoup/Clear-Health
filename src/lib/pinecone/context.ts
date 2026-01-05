@@ -13,7 +13,7 @@ export async function getMatchesFromEmbeddings(
     const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
 
     const queryResult = await namespace.query({
-      topK: 5, // Return top 5 matches
+      topK: 8, // Return top 8 matches
       vector: embeddings,
       includeMetadata: true, // Include metadata in the result
     });
@@ -33,20 +33,26 @@ export async function getContext(query: string, fileKey: string) {
   const queryEmbeddings = await getEmbeddings(query);
   const matches = await getMatchesFromEmbeddings(queryEmbeddings, fileKey);
 
-  // Filter out low-scoring matches
-  const qualifyingDocs = matches.filter(
-    (match) => match.score && match.score > 0.7
-  );
-
   type Metadata = {
     text: string;
     pageNumber: number;
   };
 
+  // Filter out low-scoring matches, but allow a small fallback so we always return something
+  const qualifyingDocs = matches.filter(
+    (match) => match.score && match.score > 0.35
+  );
+
+  const docsToUse =
+    qualifyingDocs.length > 0 ? qualifyingDocs : matches?.slice(0, 3) || [];
+
   // Extract the text from the metadata of qualifying matches
-  let docs = qualifyingDocs.map((match) => (match.metadata as Metadata).text);
+  let docs = docsToUse.map((match) => {
+    const meta = match.metadata as Metadata;
+    const pageLabel = meta.pageNumber ? `Page ${meta.pageNumber}: ` : "";
+    return `${pageLabel}${meta.text}`;
+  });
 
   // Return the concatenated relevant text
   return docs.join("\n").substring(0, 3000); // Limit to 3000 characters
 }
-

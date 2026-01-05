@@ -1,112 +1,101 @@
 .menu-bar {
-    /* Other styles for the menu bar */
+  /* Other styles for the menu bar */
 }
 
 .company-name {
-    /* Styles for the company name section */
-    font-weight: bold;
-    text-align: left;
-    font-size: 25px;
-    margin-left: 5px;
+  font-weight: 700;
+  text-align: left;
+  font-size: 22px;
+  letter-spacing: -0.3px;
+  color: var(--ink);
 }
 
 .menu-item::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 100px;
-    /* Width of the fade effect */
-    background: linear-gradient(to left, #f8fafc, transparent);
+  display: none;
 }
 
 .profile-section {
-    /* Styles for the profile section at the bottom */
-    background: #ffffff;
-    border-top: 1px solid #e2e8f0;
+  /* Styles for the profile section at the bottom */
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
 }
 
 .user-profile {
-    /* Styles for the user profile section */
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    font-weight: bold;
+  /* Styles for the user profile section */
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  font-weight: bold;
 }
 
 .user-name {
-    /* Additional styles for the user name */
-    margin-left: 8px;
+  /* Additional styles for the user name */
+  margin-left: 8px;
 }
 
 .custom-button {
-    display: inline-flex;
-    /* Aligns the icon with the text */
-    align-items: center;
-    /* Centers the items vertically */
-    background-color: #fafafc;
-    /* The button's background color */
-    color: rgb(255, 0, 0);
-    /* The button's text color */
-    border: none;
-    /* Removes the border */
-    padding: 10px 8px;
-    /* Vertical and horizontal padding */
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    outline: none;
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  color: #0b1021;
+  border: 1px solid rgba(11, 16, 33, 0.08);
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  outline: none;
+  box-shadow: 0 10px 30px rgba(12, 17, 33, 0.08);
 }
 
+.custom-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(11, 16, 33, 0.14);
+  box-shadow: 0 20px 40px rgba(12, 17, 33, 0.12);
+  background: rgba(124, 251, 115, 0.08);
+}
 
 .plus-icon {
-    background-color: white;
-    color: #ff0000;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 8px;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    line-height: 20px;
-    font-size: 24px;
-    font-weight: bold;
+  background-color: #ffffff;
+  color: #0b1021;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .modal-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    /* Semi-transparent black */
-    backdrop-filter: blur(5px);
-    /* Optional blur effect */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    /* Ensure this is higher than other content */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black */
+  backdrop-filter: blur(5px);
+  /* Optional blur effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  /* Ensure this is higher than other content */
 }
 
 .modal-content {
-    display: flex;
-    justify-content: center;
-    /* Center the tables horizontally */
-    flex-wrap: wrap;
-    /* Allows wrapping to next line on small screens */
-    gap: 16px;
-    /* Space between the tables */
-}
-.stripe-pricing-table {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    /* Or 'space-around' for even spacing */
+  display: flex;
+  justify-content: center;
+  /* Center the tables horizontally */
+  flex-wrap: wrap;
+  /* Allows wrapping to next line on small screens */
+  gap: 16px;
+  /* Space between the tables */
 }

@@ -1,15 +1,11 @@
 // components/ToolTip.js
-import React, { useState, useEffect, forwardRef, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../../styles/tooltip.css";
 import DOMPurify from "dompurify";
 import parse from "html-react-parser";
-import { useToken } from "../../contexts/TokenContext";
 import { motion } from "framer-motion";
-import glass from "../../assets/images/magnifyingglass.png";
-import bulb from "../../assets/images/secondbulb.png";
-import Image from "next/image";
 
-const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
+const ToolTip = ({ containerRef }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [contentMode, setContentMode] = useState("buttons"); // 'buttons' or 'text'
@@ -18,7 +14,29 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
   const tooltipRef = useRef();
   const [source, setSource] = useState(null);
   const baseToolTipHeight = 40;
-  const { fetchTokenUsage, usedTokens, maxTokens } = useToken();
+  const padding = 12;
+
+  const clampToContainer = (rect, containerRect, offsetY = 0) => {
+    if (!containerRect) return null;
+
+    const tooltipWidth = tooltipRef.current?.offsetWidth ?? 260;
+    const tooltipHeight = tooltipRef.current?.offsetHeight ?? 110;
+    const rawLeft = rect.left - containerRect.left;
+    const rawTop = rect.top - containerRect.top + offsetY;
+    const maxLeft = Math.max(
+      padding,
+      containerRect.width - tooltipWidth - padding
+    );
+    const maxTop = Math.max(
+      padding,
+      containerRect.height - tooltipHeight - padding
+    );
+
+    return {
+      left: Math.min(Math.max(rawLeft, padding), maxLeft),
+      top: Math.min(Math.max(rawTop, padding), maxTop),
+    };
+  };
 
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -42,8 +60,8 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
         selection.toString().length > 1 &&
         !isSelectionWithinTooltip
       ) {
-        if (ref.current) {
-          const containerRect = ref.current.getBoundingClientRect();
+        if (containerRef?.current) {
+          const containerRect = containerRef.current.getBoundingClientRect();
 
           if (
             rect.left > containerRect.left &&
@@ -51,16 +69,17 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
             rect.top > containerRect.top &&
             rect.bottom < containerRect.bottom
           ) {
-            setPosition({
-              top:
-                rect.top +
-                window.scrollY -
-                containerRect.top -
-                baseToolTipHeight,
-              left: rect.left - containerRect.left + window.scrollX,
-            });
-
-            setIsVisible(true);
+            const nextPosition = clampToContainer(
+              rect,
+              containerRect,
+              -baseToolTipHeight
+            );
+            if (nextPosition) {
+              setPosition(nextPosition);
+              setIsVisible(true);
+            } else {
+              setIsVisible(false);
+            }
           } else {
             setIsVisible(false);
           }
@@ -74,9 +93,9 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
 
     document.addEventListener("mouseup", handleSelectionChange);
     return () => {
-      document.addEventListener("mouseup", handleSelectionChange);
+      document.removeEventListener("mouseup", handleSelectionChange);
     };
-  }, [ref, baseToolTipHeight]);
+  }, [containerRef, baseToolTipHeight]);
 
   useEffect(() => {
     if (!isVisible) {
@@ -89,18 +108,24 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
     const selection = window.getSelection();
     const selectedWord = selection.toString().trim();
     setDefinitions([]); // Clear previous definitions
+    setExplanation("");
     setSource("");
 
     if (selectedWord) {
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
-      const container = ref.current.getBoundingClientRect();
+      const container = containerRef?.current?.getBoundingClientRect();
+      if (!container) return;
 
       // Set the tooltip position to be right under the selected text
-      setPosition({
-        top: rect.bottom + window.scrollY - container.top + 5, // Add a small space below the selection
-        left: rect.left - container.left + window.scrollX,
-      });
+      const nextPosition = clampToContainer(
+        rect,
+        container,
+        rect.height + 5 // place just below the selection
+      );
+      if (nextPosition) {
+        setPosition(nextPosition);
+      }
 
       try {
         // First, try fetching from Wiktionary
@@ -188,28 +213,7 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
     }
   };
 
-  async function postTokenUsage(tokenCount) {
-    const formData = new FormData();
-    formData.append("tokens", tokenCount);
-
-    const response = await fetch("/api/update-token-usage", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ tokenCount }),
-    });
-
-    const result = await response.json();
-    return result;
-  }
-
   const handleExplainSubmit = async (e) => {
-    if (usedTokens >= maxTokens) {
-      toggleUpgradeModal();
-      setIsVisible(false);
-      return;
-    }
     e.preventDefault();
     setContentMode("text");
     setExplanation("");
@@ -221,13 +225,18 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
     if (selectedText) {
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
-      const container = ref.current.getBoundingClientRect();
+      const container = containerRef?.current?.getBoundingClientRect();
+      if (!container) return;
 
       // Set the tooltip position to be right under the selected text
-      setPosition({
-        top: rect.bottom + window.scrollY - container.top + 5, // Add a small space below the selection
-        left: rect.left - container.left + window.scrollX,
-      });
+      const nextPosition = clampToContainer(
+        rect,
+        container,
+        rect.height + 5 // place just below the selection
+      );
+      if (nextPosition) {
+        setPosition(nextPosition);
+      }
 
       const response = await fetch("/api/openai-free-connection", {
         method: "POST",
@@ -242,7 +251,6 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let result = "";
-      let tokens = 0;
 
       while (true) {
         const { value, done } = await reader.read();
@@ -260,18 +268,12 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
           if (match) {
             const message = match[1].replace("\\n", "");
             result += message;
-            tokens += 1;
           }
         });
 
         // Assuming setExplanation is a function that updates your component or handles state
         setExplanation(sanitizeHTML(boldText(hyperlinkURLs(result))));
       }
-
-      // Post token usage and then fetch the updated token usage
-      await postTokenUsage(tokens);
-      // Call fetchTokenUsage after posting token usage
-      fetchTokenUsage();
     }
   };
 
@@ -288,6 +290,26 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
     return text.replace(pattern, "<strong>$1</strong>");
   }
 
+  const handleAskClick = () => {
+    const selection = window.getSelection();
+    const selectedText = selection.toString().trim();
+    if (!selectedText) return;
+
+    const prompt = `Please answer based on this excerpt: "${selectedText}"`;
+
+    const url = new URL(window.location.href);
+    url.pathname = "/pdf-viewer";
+    url.searchParams.set("ask", prompt);
+
+    const existingKey =
+      url.searchParams.get("fileKey") || url.searchParams.get("key");
+    if (existingKey) {
+      url.searchParams.set("fileKey", existingKey);
+    }
+
+    window.location.href = url.toString();
+  };
+
   function sanitizeHTML(html) {
     return DOMPurify.sanitize(html);
   }
@@ -300,75 +322,43 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.3 }}
         style={{
-          position: "absolute",
           top: `${position.top}px`,
           left: `${position.left}px`,
           visibility: isVisible ? "visible" : "hidden",
-          padding: "5px",
-          backgroundColor: "white",
-          color: "black",
-          borderRadius: "4px",
-          zIndex: 5,
-          maxWidth: "500px",
-          border: "1px solid rgba(220, 220, 220, 0.7)",
-          boxShadow:
-            "0 2px 4px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.15)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          justifyContent: "space-around",
-          overflow: "auto",
+          position: "absolute",
         }}
+        className={`inline-tooltip ${
+          contentMode === "buttons" ? "inline-tooltip--actions" : ""
+        }`}
+        ref={tooltipRef}
       >
         {contentMode === "buttons" ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              width: "100%",
-              justifyContent: "space-around",
-              alignItems: "center",
-            }}
-          >
+          <>
             <button
-              className="styled-button mr-1 font-inter flex flex-row"
+              className="styled-button font-inter"
               onClick={handleDefineClick}
             >
-              <Image
-                src={glass}
-                alt="Magnifying Glass"
-                width={18}
-                height={18}
-                style={{ marginRight: "6px" }}
-              />
               Define
             </button>
-            <div
-              style={{
-                height: "20px",
-                width: "2px",
-                backgroundColor: "rgba(0, 0, 0, 0.1)",
-              }}
-            ></div>
+            <span className="tooltip-divider" />
             <button
-              className="styled-button ml-1 font-inter flex flex-row"
+              className="styled-button font-inter"
               onClick={handleExplainSubmit}
             >
-              <Image
-                src={bulb}
-                alt="Light Bulb"
-                width={18}
-                height={18}
-                style={{ marginRight: "6px" }}
-              />
               Explain
             </button>
-          </div>
+            <span className="tooltip-divider" />
+            <button
+              className="styled-button font-inter"
+              onClick={handleAskClick}
+            >
+              Ask
+            </button>
+          </>
         ) : (
           <motion.div
             style={{ textAlign: "left" }}
-            className="px-3 py-1"
-            ref={tooltipRef}
+            className="tooltip-body px-2 py-1"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
@@ -377,31 +367,36 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
             {definitions.length > 0 && (
               <>
                 {definitions.map((meaning, idx) => (
-                  <div key={idx} style={{ marginBottom: "10px" }}>
+                  <div key={idx} style={{ marginBottom: "8px" }}>
                     <div className="">
                       <strong
                         style={{
                           textTransform: "capitalize",
-                          fontSize: "14px",
+                          fontSize: "12px",
                         }}
                       >
                         {meaning.partOfSpeech}
                       </strong>
                     </div>
                     <ol
-                      style={{ marginLeft: "10px", marginTop: "4px" }}
+                      style={{ marginLeft: "8px", marginTop: "2px" }}
                       className="mt-2"
                     >
                       {meaning.definitions.map((def) => (
                         <li
                           key={def.index}
                           style={{
-                            fontSize: "13px",
-                            marginBottom: "5px",
-                            color: "black",
+                            fontSize: "12px",
+                            marginBottom: "3px",
+                            color: "var(--ink)",
                           }}
                         >
-                          <span style={{ color: "gray", marginRight: "5px" }}>
+                          <span
+                            style={{
+                              color: "var(--muted-ink)",
+                              marginRight: "5px",
+                            }}
+                          >
                             {def.index}.
                           </span>
                           {def.definition}
@@ -413,7 +408,7 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
                 <span
                   style={{
                     fontSize: "11px",
-                    color: "gray",
+                    color: "var(--muted-ink)",
                     marginTop: "10px",
                   }}
                 >
@@ -425,12 +420,12 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
             {explanation && (
               <div className="mb-2">
                 <div className="mt-1 mb-1">
-                  <h4 style={{ fontSize: "14px", fontWeight: "bold" }}>
+                  <h4 style={{ fontSize: "12px", fontWeight: "bold" }}>
                     Explanation:
                   </h4>
                 </div>
                 <p
-                  style={{ fontSize: "13px", marginLeft: "5px" }}
+                  style={{ fontSize: "12px", marginLeft: "4px" }}
                   id="explanation"
                   // dangerouslySetInnerHTML={{ __html: explanation }}
                 >
@@ -443,6 +438,6 @@ const ToolTip = forwardRef(({ tooltipText, toggleUpgradeModal }, ref) => {
       </motion.div>
     )
   );
-});
+};
 
 export default ToolTip;

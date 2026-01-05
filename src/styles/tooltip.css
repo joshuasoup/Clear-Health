@@ -1,32 +1,79 @@
+.inline-tooltip {
+  background: #ffffff;
+  color: var(--ink);
+  border-radius: 10px;
+  z-index: 20;
+  max-width: 360px;
+  min-width: 120px;
+  width: auto;
+  border: 1px solid var(--grid-line);
+  box-shadow: 0 12px 30px rgba(12, 17, 33, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  padding: 5px 10px;
+  backdrop-filter: blur(8px);
+  font-family: "Manrope", "Inter", sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.inline-tooltip--actions {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tooltip-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+}
+
+.tooltip-divider {
+  height: 14px;
+  width: 1px;
+  background-color: rgba(12, 17, 33, 0.12);
+}
+
 .styled-button {
-    background-color: #ffffff;
-    /* Green background, adjust the hex value to match the screenshot */
-    color: #ff0004;
-    /* White text */
-    border: none;
-    /* No border for a flat design */
-    border-radius: 4px;
-    /* Slightly rounded corners, adjust as needed */
-    padding: 4px 16px;
-    padding-left: 10px;
-    font-size: 13px;
-    cursor: pointer;
-    outline: none;
-    transition: background-color 0.3s;
-    font-weight: 600;
+  background-color: var(--cloud);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 3px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+  font-weight: 600;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: "Manrope", "Inter", sans-serif;
 }
 
 .styled-button:hover {
-    background-color: #f1f1f1;
-    /* Slightly darker green on hover, adjust as needed */
+  background-color: rgba(11, 16, 33, 0.04);
+  box-shadow: none;
+}
+
+.styled-button:active {
+  box-shadow: 0 4px 12px rgba(12, 17, 33, 0.08);
+}
+
+.tooltip-body {
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.35;
+  font-family: "Manrope", "Inter", sans-serif;
 }
 
 #hyperlink {
-    color: red;
-    font-weight: 600;
-    text-decoration: underline;
-}
-
-::after #hyperlink {
-    color: rgb(150, 3, 3)
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
 }

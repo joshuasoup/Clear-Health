@@ -1,36 +1,31 @@
 import s3Client from "../../../lib/aws/db";
-import clientPromise from "../../../lib/mongo/db";
-import { getAuth } from "@clerk/nextjs/server";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getPineconeClient } from "../../../lib/pinecone/pinecone";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
-    const { userId } = getAuth(req);
     const { key } = await req.json(); // Parse the JSON body for the file key
 
     if (!key) {
-      return new Response(
-        JSON.stringify({ error: "File key must be provided" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+      return NextResponse.json(
+        { error: "File key must be provided" },
+        { status: 400 }
       );
+    }
+
+    const bucket = process.env.AWS_S3_BUCKET_NAME;
+
+    if (!bucket) {
+      throw new Error("AWS_S3_BUCKET_NAME is not configured");
     }
 
     // Delete the file from S3
     const deleteParams = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Bucket: bucket,
       Key: key,
     };
     await s3Client.send(new DeleteObjectCommand(deleteParams));
-
-    // Delete the file metadata from MongoDB
-    const client = await clientPromise;
-    const database = client.db("userdata");
-    const usersCollection = database.collection("Users");
-    await usersCollection.updateOne(
-      { clerkUserId: userId },
-      { $pull: { pdfs: { key: key } } }
-    );
 
     // Delete the vector from Pinecone
     const pineconeClient = getPineconeClient();
@@ -42,15 +37,16 @@ export async function POST(req) {
 
     await pineconeIndex.namespace(`${key}`).deleteAll();
 
-    return new Response(
-      JSON.stringify({ message: "File deleted successfully" }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+    const response = NextResponse.json(
+      { message: "File deleted successfully" },
+      { status: 200 }
     );
+    return response;
   } catch (error) {
     console.error("Error deleting file:", error);
-    return new Response(JSON.stringify({ error: "Failed to delete file" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(
+      { error: "Failed to delete file" },
+      { status: 500 }
+    );
   }
 }

@@ -58,7 +58,7 @@ export default function ChatComponent({ callhandleClick, fileKey }) {
   }, [messages]);
 
   return (
-    <div className="flex flex-col py-0 stretch h-full w-full justify-between border bg-menu px-4">
+    <div className="chat-panel flex flex-col py-0 stretch h-full w-full justify-between border bg-menu px-4 text-[13px] leading-relaxed">
       <div className="flex flex-row justify-between">
         <button
           onClick={callhandleClick}
@@ -88,7 +88,7 @@ export default function ChatComponent({ callhandleClick, fileKey }) {
         {messages.map((m) => (
           <div
             key={m.id}
-            className="font-inter my-1 rounded-md text-sm flex items-start"
+            className="my-1 rounded-md flex items-start"
           >
             <div className="bg-transparent mr-1">
               {m.role === "user" ? (
@@ -109,14 +109,14 @@ export default function ChatComponent({ callhandleClick, fileKey }) {
             </div>
             {m.role === "user" ? (
               <div
-                className="bg-userchat rounded-md py-3 px-3 flex-1 text-left"
+                className="message-bubble bg-userchat rounded-md py-3 px-3 flex-1 text-left"
                 style={{ minWidth: "280px", minHeight: "44px" }}
               >
                 {m.content}
               </div>
             ) : (
               <div
-                className="bg-white rounded-md py-3 px-3 flex-1 text-left"
+                className="message-bubble bg-white rounded-md py-3 px-3 flex-1 text-left"
                 style={{ minWidth: "280px", minHeight: "44px" }}
               >
                 {m.content}
@@ -129,7 +129,7 @@ export default function ChatComponent({ callhandleClick, fileKey }) {
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="bg-white rounded-md px-4 py-3 shadow-md bottom-0">
           <textarea
-            className="resize-none w-full border-0 overflow-y-hidden bottom-0 align-middle p-0 focus:ring-transparent"
+            className="resize-none w-full border-0 overflow-y-hidden bottom-0 align-middle p-0 focus:ring-transparent text-[13px] leading-relaxed"
             value={input}
             placeholder="Ask Anything..."
             onChange={handleInputChange}

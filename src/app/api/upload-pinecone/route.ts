@@ -1,18 +1,9 @@
-import { downloadFromS3 } from "../../../lib/pinecone/s3-server";
 import { getEmbeddings } from "../../../lib/pinecone/embeddings";
 import { getPineconeClient } from "../../../lib/pinecone/pinecone";
 import pdfParse from 'pdf-parse/lib/pdf-parse'
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import md5 from "md5";
 import { convertToAscii } from "../../../lib/pinecone/utils";
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-
 
 type DocumentType = {
   pageContent: string;
@@ -70,42 +61,48 @@ async function embedDocuments(documents) {
   );
 }
 
+async function extractFileBuffer(req: Request) {
+  const contentType = req.headers.get("content-type") || "";
+
+  if (contentType.includes("multipart/form-data")) {
+    const formData = await req.formData();
+    const file = formData.get("file");
+    const providedKey = formData.get("fileKey")?.toString();
+
+    if (!file || typeof file === "string") {
+      throw new Error("No file found in form-data payload");
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const fileName = (file as File).name || "upload.pdf";
+    const fileKey =
+      providedKey ||
+      `${Date.now()}-${convertToAscii(fileName).replace(/\s+/g, "-")}`;
+
+    return { fileBuffer: buffer, fileKey };
+  }
+
+  // Support legacy JSON body containing fileKey only (expected to be handled upstream).
+  const body = await req.json().catch(() => null);
+  const legacyKey = body?.fileKey;
+
+  if (legacyKey) {
+    throw new Error(
+      "Direct file uploads are required now. Send multipart/form-data with a `file` field."
+    );
+  }
+
+  throw new Error("Unsupported payload. Send multipart/form-data with a file.");
+}
+
 export async function POST(req) {
   try {
-
-    // Use NextRequest's json() method
-    const body = await req.json();
-
-    const fileKey = body?.fileKey;
-
-    if (!fileKey) {
-      console.error('No fileKey found in request body');
-      return new Response(
-        JSON.stringify({ error: "Missing fileKey in the request body" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    // Detailed S3 download logging
-    console.log("Attempting to download PDF from S3...");
-    const fileBuffer = await downloadFromS3(fileKey);
-    
-    if (!fileBuffer) {
-      console.error('Failed to download file buffer');
-      throw new Error("Failed to download PDF");
-    }
-
-    console.log('File Buffer Details:', {
-      type: typeof fileBuffer,
-      length: fileBuffer.length,
-      isBuffer: Buffer.isBuffer(fileBuffer)
-    });
+    const { fileBuffer, fileKey } = await extractFileBuffer(req);
 
     // Detailed PDF parsing
     try {
-      const loader = await pdfParse(fileBuffer, {
-        max: 1 // Limit to first page for testing
-      });
+      const loader = await pdfParse(fileBuffer);
 
       console.log('PDF Parse Result:', {
         textLength: loader.text ? loader.text.length : 0,
@@ -125,7 +122,8 @@ export async function POST(req) {
       return new Response(
         JSON.stringify({
           message: "Successfully loaded into Pinecone",
-          result: vectors,
+          fileKey,
+          namespace: convertToAscii(fileKey),
         }),
         { status: 200, headers: { "Content-Type": "application/json" } }
       );
@@ -153,16 +151,18 @@ export async function POST(req) {
       stack: error.stack
     });
 
+    const badRequest =
+      error?.message?.includes("Direct file uploads are required") ||
+      error?.message?.includes("Unsupported payload") ||
+      error?.message?.includes("No file found");
+
     return new Response(
       JSON.stringify({ 
         error: "Failed to process and upload PDF",
         errorDetails: error.message
       }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      { status: badRequest ? 400 : 500, headers: { "Content-Type": "application/json" } }
     );
   }
 }
-
-
-
 

@@ -6,15 +6,12 @@ import Image from "next/image";
 import plus from "../../assets/images/plus.png";
 import pdfIcon from "../../assets/images/pdf-icon.png";
 import LoadingSpinner from "./LoadingSpinner";
-import UpgradeModal from "./UpgradeModal";
 
 const UploadButton = (props) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
-
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const handleDrop = (event) => {
     event.preventDefault();
@@ -48,48 +45,25 @@ const UploadButton = (props) => {
     }
 
     const formData = new FormData();
+    const derivedKey = `${Date.now()}-${selectedFile.name}`;
     formData.append("file", selectedFile);
+    formData.append("fileKey", derivedKey);
     setIsUploading(true);
 
     try {
-      // Step 1: Upload the file to S3 via /api/upload-pdf endpoint
-      const uploadResponse = await fetch("/api/upload-pdf", {
+      const uploadResponse = await fetch("/api/upload-pinecone", {
         method: "POST",
-        body: formData,
+        body: formData
       });
 
-      console.log(uploadResponse);
-
-      if (uploadResponse.status === 403) {
-        setIsUploading(false);
-        setSelectedFile(null);
-        setIsModalVisible(false);
-        setShowUpgradeModal(true);
-        return;
-      }
-
       if (!uploadResponse.ok) {
-        throw new Error("S3 Upload failed");
+        const errorText = await uploadResponse.text();
+        throw new Error(errorText || "Upload failed");
       }
 
       const uploadResult = await uploadResponse.json();
-      const fileKey = uploadResult.fileKey;
-      const fileName = uploadResult.fileName;
-
-      // Step 2: Call Pinecone API to process the file using the fileKey
-      const pineconeResponse = await fetch("/api/upload-pinecone", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ fileKey }),
-      });
-
-      if (!pineconeResponse.ok) {
-        throw new Error("Pinecone processing failed");
-      }
-
-      const pineconeResult = await pineconeResponse.json();
+      const fileKey = uploadResult.fileKey || derivedKey;
+      const fileName = selectedFile.name;
 
       // Reset states after successful upload
       setIsUploading(false);
@@ -100,6 +74,7 @@ const UploadButton = (props) => {
       }
     } catch (error) {
       console.error("Error during upload or Pinecone processing:", error);
+      alert("Upload failed. Please try again.");
       setIsUploading(false);
     }
   };
@@ -118,22 +93,18 @@ const UploadButton = (props) => {
     setSelectedFile(null);
   };
 
-  const openUpgradeModal = () => {
-    props.toggleUpgradeModal();
-  };
-
   return (
     <>
       <button
         onClick={toggleModal}
-        className="custom-button flex justify-between items-center w-full hover:bg-hover"
+        className="custom-button flex justify-between items-center w-full"
       >
         <span className="font-inter text-sm font-medium">Upload File</span>
 
         <Image src={plus} alt="plus" width={16} height={18} className="pr-2" />
       </button>
 
-      {isModalVisible && !showUpgradeModal && (
+      {isModalVisible && (
         <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-40">
           <button
             className="absolute top-4 right-6 text-white font-semibold text-3xl hover:text-slate-300"
@@ -239,13 +210,6 @@ const UploadButton = (props) => {
         </div>
       )}
 
-      {showUpgradeModal && (
-        <UpgradeModal
-          showModal={showUpgradeModal}
-          setShowModal={setShowUpgradeModal}
-          openUpgradeModal={openUpgradeModal}
-        />
-      )}
     </>
   );
 };

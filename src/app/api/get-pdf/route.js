@@ -1,26 +1,52 @@
-import { getAuth } from "@clerk/nextjs/server";
-import { getUserInfo } from "../../../lib/mongo/files";
+import s3Client from "../../../lib/aws/db";
+import {
+  GetObjectTaggingCommand,
+  ListObjectsV2Command,
+} from "@aws-sdk/client-s3";
+import { NextResponse } from "next/server";
 
 export async function GET(req) {
-  const { userId } = getAuth(req);
-  if (!userId) {
-    return new Response("Unauthorized", {
-      status: 401,
-    });
-  }
-
   try {
-    const { userCollection, error } = await getUserInfo(userId);
-    if (error) throw new Error(error);
+    const bucket = process.env.AWS_S3_BUCKET_NAME;
 
-    return new Response(JSON.stringify({ userCollection }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    if (!bucket) {
+      throw new Error("AWS_S3_BUCKET_NAME is not configured");
+    }
+
+    const listCommand = new ListObjectsV2Command({ Bucket: bucket });
+    const { Contents = [] } = await s3Client.send(listCommand);
+
+    const pdfs = await Promise.all(
+      Contents.filter((object) => object.Key).map(async (object) => {
+        try {
+          const tags = await s3Client.send(
+            new GetObjectTaggingCommand({
+              Bucket: bucket,
+              Key: object.Key,
+            })
+          );
+
+          const nameTag =
+            tags.TagSet?.find((tag) => tag.Key === "name") ?? null;
+
+          return {
+            key: object.Key,
+            name: nameTag?.Value || object.Key,
+          };
+        } catch (tagError) {
+          console.error(
+            `Failed to load tags for object ${object.Key}:`,
+            tagError
+          );
+          return { key: object.Key, name: object.Key };
+        }
+      })
+    );
+
+    const userCollection = [{ _id: "s3", sessionId: "shared", pdfs }];
+
+    return NextResponse.json({ userCollection }, { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

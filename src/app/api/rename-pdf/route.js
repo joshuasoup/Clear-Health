@@ -1,44 +1,63 @@
-import clientPromise from "../../../lib/mongo/db";
-import { getAuth } from "@clerk/nextjs/server";
+import s3Client from "../../../lib/aws/db";
+import {
+  GetObjectTaggingCommand,
+  PutObjectTaggingCommand,
+} from "@aws-sdk/client-s3";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
-    const { userId } = getAuth(req);
     const { fileId, newName } = await req.json(); // Parse JSON body
 
     if (!fileId || !newName) {
-      return new Response(
-        JSON.stringify({ error: "File ID and new name must be provided" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+      return NextResponse.json(
+        { error: "File ID and new name must be provided" },
+        { status: 400 }
       );
     }
 
-    const client = await clientPromise;
-    const database = client.db("userdata");
-    const usersCollection = database.collection("Users");
+    const bucket = process.env.AWS_S3_BUCKET_NAME;
 
-    // Update the name of the file in the PDFs collection
-    const result = await usersCollection.updateOne(
-      { clerkUserId: userId, "pdfs.key": fileId },
-      { $set: { "pdfs.$.name": newName } }
-    );
-
-    if (result.matchedCount === 0) {
-      return new Response(JSON.stringify({ error: "File not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
+    if (!bucket) {
+      throw new Error("AWS_S3_BUCKET_NAME is not configured");
     }
 
-    return new Response(
-      JSON.stringify({ message: "File name updated successfully" }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+    const existingTags = await s3Client.send(
+      new GetObjectTaggingCommand({
+        Bucket: bucket,
+        Key: fileId,
+      })
     );
+
+    const updatedTags =
+      existingTags.TagSet?.map((tag) =>
+        tag.Key === "name" ? { ...tag, Value: newName } : tag
+      ) ?? [];
+
+    const hasNameTag = updatedTags.some((tag) => tag.Key === "name");
+
+    if (!hasNameTag) {
+      updatedTags.push({ Key: "name", Value: newName });
+    }
+
+    await s3Client.send(
+      new PutObjectTaggingCommand({
+        Bucket: bucket,
+        Key: fileId,
+        Tagging: { TagSet: updatedTags },
+      })
+    );
+
+    const response = NextResponse.json(
+      { message: "File name updated successfully" },
+      { status: 200 }
+    );
+    return response;
   } catch (error) {
     console.error("Error updating file name:", error);
-    return new Response(
-      JSON.stringify({ error: "Failed to update file name" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+    return NextResponse.json(
+      { error: "Failed to update file name" },
+      { status: 500 }
     );
   }
 }
