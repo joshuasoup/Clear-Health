@@ -52,15 +52,6 @@ const ChatSurface = ({ title, fileKey, onBack, initialAsk }) => {
     body: {
       fileKey,
     },
-    initialMessages: initialAsk
-      ? [
-          {
-            id: "initial-ask",
-            role: "user",
-            content: initialAsk,
-          },
-        ]
-      : undefined,
   });
 
   const chatBodyRef = useRef(null);
@@ -70,6 +61,7 @@ const ChatSurface = ({ title, fileKey, onBack, initialAsk }) => {
   const hasMessages = messages.length > 0;
   const [copiedId, setCopiedId] = useState(null);
   const [feedback, setFeedback] = useState({});
+  const hasSeededInputRef = useRef(false);
 
   useEffect(() => {
     try {
@@ -96,6 +88,16 @@ const ChatSurface = ({ title, fileKey, onBack, initialAsk }) => {
       console.error("Unable to persist chat", error);
     }
   }, [messages, storageKey]);
+
+  useEffect(() => {
+    if (initialAsk && !hasSeededInputRef.current && messages.length === 0) {
+      setInput(initialAsk);
+      hasSeededInputRef.current = true;
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    }
+  }, [initialAsk, messages.length, setInput]);
 
   useEffect(() => {
     if (!chatBodyRef.current) return;
@@ -713,7 +715,7 @@ export default function Viewer() {
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                className="px-4 py-2 text-sm rounded-full border border-[var(--ink)] text-[var(--ink)] bg-white hover:-translate-y-0.5 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                className="h-10 px-4 text-sm rounded-full border border-[var(--grid-line)] text-[var(--ink)] bg-white shadow-[0_6px_18px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={isEmbedding}
                 onClick={() => fileInputRef.current?.click()}
               >
@@ -748,7 +750,7 @@ export default function Viewer() {
             <div className="flex-1 rounded-[18px]  overflow-hidden">
               <PDFLoader
                 pdfUrl={selectedPdfUrl}
-                pageHeight={860}
+                pageHeight={880}
                 pageScale={0.95}
               />
             </div>

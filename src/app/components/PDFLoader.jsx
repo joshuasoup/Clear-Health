@@ -285,9 +285,9 @@ const PDFLoader = ({
         )}
       </div>
       {showPageNumber && numPages && (
-        <div className="h-10 page-number-area ">
-          <p className="text-sm font-inter">
-            Page {pageNumber} of {numPages}
+        <div className="h-8 page-number-area text-center">
+          <p className="text-[11px] tracking-[0.14em] text-[var(--muted-ink)]">
+            p. {pageNumber} / {numPages}
           </p>
         </div>
       )}
