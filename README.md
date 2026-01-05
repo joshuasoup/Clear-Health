@@ -38,7 +38,6 @@ Create `.env.local`:
 ```
 OPENAI_API_KEY=...
 PINECONE_API_KEY=...
-
 ```
 
 ## Architecture
