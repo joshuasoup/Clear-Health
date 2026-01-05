@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -491,7 +491,7 @@ const ChatSurface = ({ title, fileKey, onBack, initialAsk }) => {
   );
 };
 
-export default function Viewer() {
+function ViewerContent() {
   const searchParams = useSearchParams();
   const sampleReportUrl = "/sample-report.pdf";
   const sampleTitle = "Sample report";
@@ -758,5 +758,19 @@ export default function Viewer() {
         </section>
       </main>
     </div>
+  );
+}
+
+export default function Viewer() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center text-[var(--muted-ink)]">
+          Loading PDF viewer...
+        </div>
+      }
+    >
+      <ViewerContent />
+    </Suspense>
   );
 }
